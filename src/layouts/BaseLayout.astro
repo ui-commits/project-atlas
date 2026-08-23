@@ -2,8 +2,8 @@
 /**
  * BaseLayout — Root document layout for Project Atlas.
  * Provides the HTML shell, skip navigation, persistent sticky header
- * with "C. Rodriguez" name link, Projects dropdown, open center space,
- * and GitHub + Email icon actions on the far right.
+ * with "C. Rodriguez" name link and GitHub + Email icon actions on
+ * the far right.
  *
  * Includes dynamic particulate background and view transition management.
  */
@@ -40,11 +40,11 @@ const {
     <DynamicBackground />
 
     <!-- ------------------------------------------------------------------ -->
-    <!--  Persistent Header: Name + Dropdown on Left, Icons on Far Right      -->
+    <!--  Persistent Header: Name on Left, Icons on Far Right                 -->
     <!-- ------------------------------------------------------------------ -->
     <header class="site-header">
       <div class="site-header-inner">
-        <!-- Left group: Name + Category Dropdown -->
+        <!-- Left group: Name -->
         <div class="header-left">
           <a
             href="https://voluble-babka-6e3ce5.netlify.app/#main-content"
@@ -55,27 +55,7 @@ const {
             C. Rodriguez
           </a>
 
-          <!-- Category Filter Dropdown -->
-          <div class="category-dropdown-wrapper">
-            <label for="header-category-filter" class="visually-hidden">Filter Projects</label>
-            <select
-              id="header-category-filter"
-              class="header-category-select"
-              aria-label="Filter projects by category"
-            >
-              <option value="all">Projects</option>
-              <option value="ui-systems">UI Systems &amp; Theme Kits</option>
-              <option value="runtime-systems">Runtime &amp; Systems</option>
-              <option value="agents-automation">Agents &amp; Automation</option>
-              <option value="tools-analysis">Tools &amp; Analysis</option>
-              <option value="creative-experiments">Creative Experiments</option>
-              <option value="developer-tools">Developer Tools</option>
-              <option value="personal-context">Portfolio &amp; Context</option>
-            </select>
-            <svg class="dropdown-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-              <path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-          </div>
+
         </div>
 
         <!-- Right group: GitHub icon first, Email envelope icon furthest right -->
@@ -115,56 +95,11 @@ const {
     <PreviewModal />
 
     <!-- ------------------------------------------------------------------ -->
-    <!--  Interactive Header Category Filter & Preview Controller            -->
+    <!--  Interactive Preview Controller                                     -->
     <!-- ------------------------------------------------------------------ -->
     <script>
       function setupAppControllers() {
-        // --- 1. Category Dropdown Filter ---
-        const categorySelect = document.getElementById('header-category-filter') as HTMLSelectElement | null;
-        const grid = document.getElementById('project-grid');
-        const emptyState = document.getElementById('empty-state') as HTMLElement | null;
-
-        if (categorySelect) {
-          // Sync with URL search params on page load
-          const params = new URLSearchParams(window.location.search);
-          const currentCat = params.get('category');
-          if (currentCat && Array.from(categorySelect.options).some(o => o.value === currentCat)) {
-            categorySelect.value = currentCat;
-            applyCategoryFilter(currentCat);
-          }
-
-          categorySelect.onchange = () => {
-            const selected = categorySelect.value;
-            if (window.location.pathname === '/' || window.location.pathname === '') {
-              // On home page: filter immediately in-place and update URL param
-              applyCategoryFilter(selected);
-              const newUrl = selected === 'all' ? '/' : `/?category=${encodeURIComponent(selected)}`;
-              window.history.replaceState({}, '', newUrl);
-            } else {
-              // On other pages: navigate to index with category query
-              const targetUrl = selected === 'all' ? '/' : `/?category=${encodeURIComponent(selected)}`;
-              window.location.href = targetUrl;
-            }
-          };
-        }
-
-        function applyCategoryFilter(cat: string) {
-          if (!grid) return;
-          const cards = Array.from(grid.querySelectorAll<HTMLElement>('[data-category]'));
-          let visibleCount = 0;
-
-          cards.forEach((card) => {
-            const match = cat === 'all' || card.dataset.category === cat;
-            card.hidden = !match;
-            if (match) visibleCount++;
-          });
-
-          if (emptyState) {
-            emptyState.hidden = visibleCount > 0;
-          }
-        }
-
-        // --- 2. Preview Modal Controller ---
+        // --- 1. Preview Modal Controller ---
         // Delegated listeners bind once per document and resolve their
         // elements at event time, so they survive Astro body swaps without
         // stacking duplicate handlers on every astro:page-load.
@@ -295,47 +230,6 @@ const {
   .header-name-link:hover,
   .header-name-link:focus-visible {
     color: #6ee7b7;
-  }
-
-  .category-dropdown-wrapper {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .header-category-select {
-    appearance: none;
-    -webkit-appearance: none;
-    background-color: var(--color-surface);
-    color: var(--color-text);
-    font-family: var(--font-mono);
-    font-size: var(--text-xs);
-    font-weight: var(--weight-medium);
-    letter-spacing: 0.03em;
-    padding: 0.35rem 1.85rem 0.35rem 0.75rem;
-    border: 1px solid var(--color-contour);
-    border-radius: var(--border-radius-sm);
-    cursor: pointer;
-    transition: all var(--duration-fast) var(--ease-out);
-    outline: none;
-  }
-
-  .header-category-select:hover {
-    border-color: var(--color-focus);
-    background-color: var(--color-surface-strong);
-    color: var(--color-ink);
-  }
-
-  .header-category-select:focus-visible {
-    border-color: #6ee7b7;
-    box-shadow: 0 0 0 2px rgba(110, 231, 183, 0.4);
-  }
-
-  .dropdown-chevron {
-    position: absolute;
-    right: 0.6rem;
-    color: var(--color-text-muted);
-    pointer-events: none;
   }
 
   .visually-hidden {
