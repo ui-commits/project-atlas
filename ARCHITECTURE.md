@@ -155,7 +155,7 @@ The site uses global CSS tokens plus component-scoped styles. There is no Tailwi
 git push / pull request
         |
         v
-GitHub Actions: npm ci -> npm run check -> npm run build
+GitHub Actions: npm ci -> npm run check -> npm run build -> link validation
         |
         v
 Vercel: install -> npm run build -> serve dist/
@@ -175,6 +175,12 @@ Vercel deployment protection is an account/project setting outside this reposito
 | Live project URLs | Site moved, paused, or protected | Records can omit link; routine verification is required |
 | iframe previews | Target disallows framing | “Open Live Project” link remains available |
 | Vercel | Access protection or project scope mismatch | Verify production alias and access after deploy |
+
+### Local thumbnail capture
+
+`scripts/capture-thumbnails.mjs` uses Playwright Chromium to visit every content record with a `liveUrl` at a 1600 × 1000 viewport and write `public/images/projects/<slug>.webp`. It waits for DOM content, gives the page a short settling period, disables animations, and writes a machine-readable capture report. It is deliberately best effort: failed targets do not prevent other records from being captured, but the process exits non-zero to make failures visible.
+
+The script adds a schema-valid thumbnail block only after it has written an image. It does not overwrite images by default; pass `--force` to refresh them. Captures require human visual review before commit because a technically successful screenshot can still contain a banner, loading state, or sensitive material.
 
 ## Change guide
 
@@ -204,7 +210,6 @@ These are intentional next steps, not hidden requirements of the current codebas
 
 - Commit local thumbnails for all records and remove Microlink from the critical visual path.
 - Add collection-level validation for unique accession IDs and valid related-slug references.
-- Add automated internal/external link checks with a deliberate policy for transient remote failures.
 - Add browser tests for filtering, modal focus handling, dossier navigation, and responsive layouts.
 - Add scheduled content verification using `lastVerified` and an ownership/review policy.
 - Enable and review production availability/performance monitoring.

@@ -37,9 +37,10 @@ Astro prints the local URL, normally `http://localhost:4321`.
 npm run check
 npm run build
 npm run preview
+npm run check:links
 ```
 
-`npm run check` runs Astro and TypeScript diagnostics. `npm run build` validates the content collection and creates the deployable static site in `dist/`. Use `npm run preview` to inspect that production build locally.
+`npm run check` runs Astro and TypeScript diagnostics. `npm run build` validates the content collection and creates the deployable static site in `dist/`. Use `npm run preview` to inspect that production build locally. `npm run check:links` validates internal routes in `dist/` and external URLs; it retries transient failures and only fails on confirmed broken links.
 
 ## Project structure
 
@@ -118,6 +119,23 @@ thumbnail:
 ```
 
 The current UI falls back to a Microlink screenshot for live projects without a thumbnail, then to a generated SVG `RegistryPlate` if the remote screenshot fails. Remote screenshots are convenient but are not guaranteed; local, committed images are the durable option.
+
+#### Capture local thumbnails
+
+Playwright captures every record with a `liveUrl` into `public/images/projects/` at exactly 1600 × 1000 pixels (16:10), writes WebP at quality 82, and adds a `thumbnail` block to records that do not yet have one.
+
+```bash
+# Capture records that do not yet have a local image.
+npm run capture:thumbnails
+
+# Re-capture every live record.
+npm run capture:thumbnails -- --force
+
+# Re-capture one record.
+npm run capture:thumbnails -- --slug agentos --force
+```
+
+The script writes `public/images/projects/capture-report.json` and exits non-zero when one or more targets fail. Review every capture before committing: remove cookie banners or sensitive information, confirm the screen represents the project well, improve the generated alt text where needed, and rerun the build. A failed capture leaves existing frontmatter unchanged and continues with the remaining records.
 
 ## Routes and behavior
 
