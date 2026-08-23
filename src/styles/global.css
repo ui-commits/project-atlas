@@ -1,0 +1,140 @@
+/**
+ * Global Styles — Project Atlas
+ * Aggregates all design-system layers in cascade order and adds
+ * structural styles for the site shell (header, footer, skip-link).
+ *
+ * Font assets imported via @fontsource for self-hosted delivery.
+ * Layer order: fonts → reset → tokens → dark tokens → typography → shell.
+ */
+
+/* ------------------------------------------------------------------ */
+/*  Fonts (self-hosted via @fontsource)                                */
+/* ------------------------------------------------------------------ */
+
+@import '@fontsource-variable/instrument-sans';
+@import '@fontsource/ibm-plex-mono/400.css';
+@import '@fontsource/ibm-plex-mono/500.css';
+
+/* ------------------------------------------------------------------ */
+/*  Design system layers                                               */
+/* ------------------------------------------------------------------ */
+
+@import './reset.css';
+@import './tokens.css';
+@import './tokens-dark.css';
+@import './typography.css';
+
+/* ------------------------------------------------------------------ */
+/*  Document                                                           */
+/* ------------------------------------------------------------------ */
+
+body {
+  background-color: var(--color-page);
+  color: var(--color-text);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Skip navigation link                                               */
+/* ------------------------------------------------------------------ */
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-md);
+  z-index: 100;
+  padding: var(--space-sm) var(--space-md);
+  background-color: var(--color-ink);
+  color: var(--color-page);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  border-radius: var(--border-radius-sm);
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: var(--space-md);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Site header                                                        */
+/* ------------------------------------------------------------------ */
+
+.site-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding: var(--space-lg) var(--space-xl);
+}
+
+.site-title {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-ink);
+}
+
+.site-title:hover,
+.site-title:focus-visible {
+  color: var(--color-focus);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.nav-link {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--color-text-muted);
+  transition: color var(--duration-fast) var(--ease-out);
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: var(--color-focus);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Main content container                                             */
+/* ------------------------------------------------------------------ */
+
+main {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding: var(--space-lg) var(--space-xl);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Site footer                                                        */
+/* ------------------------------------------------------------------ */
+
+.site-footer {
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding: var(--space-xl);
+  border-top: 1px solid var(--color-contour);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--color-text-muted);
+}
+
+.site-footer a {
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.site-footer a:hover,
+.site-footer a:focus-visible {
+  color: var(--color-focus);
+}

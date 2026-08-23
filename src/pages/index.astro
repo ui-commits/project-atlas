@@ -1,0 +1,416 @@
+---
+/**
+ * Project Atlas — Home Page (Index)
+ * Features the primary survey statement, featured project grid,
+ * and entry points into the full registry.
+ *
+ * Includes a real-time category + status filter bar driven by vanilla JS.
+ * ProjectCards carry data-category and data-status attributes used as
+ * filter targets — no framework needed.
+ */
+
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { CATEGORY_LABELS, STATUS_LABELS } from '../lib/registry';
+import { PROJECT_CATEGORIES, PROJECT_STATUSES } from '../schemas/project';
+
+const allProjects = await getCollection('projects');
+const featuredProjects = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.registryId.localeCompare(b.data.registryId));
+
+// Collect only the categories and statuses actually present in featured projects
+const presentCategories = [...new Set(featuredProjects.map((p) => p.data.category))];
+const presentStatuses   = [...new Set(featuredProjects.map((p) => p.data.status))];
+---
+
+<BaseLayout title="Project Atlas — Creative Engineering Registry">
+  <section class="hero-section" aria-labelledby="hero-heading">
+    <div class="hero-manifest">
+      <span class="label">Field Survey &amp; Accession Index</span>
+      <h1 id="hero-heading" class="hero-title">Project Atlas</h1>
+      <p class="hero-lead">
+        A living registry of active, experimental, and archived creative engineering systems.
+        Encompassing distributed runtime visualization, deterministic state machines,
+        forest-intelligence design systems, and agent orchestration kernels.
+      </p>
+    </div>
+  </section>
+
+  <section class="section-featured" aria-labelledby="featured-heading">
+    <div class="section-header">
+      <h2 id="featured-heading" class="section-title">Featured Accessions</h2>
+      <span class="mono count-badge" id="results-count">[{featuredProjects.length} records]</span>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!--  Filter Bar                                                         -->
+    <!-- ------------------------------------------------------------------ -->
+    <div
+      class="filter-bar"
+      role="group"
+      aria-label="Filter projects by category and status"
+    >
+      <!-- Category filter -->
+      <fieldset class="filter-group">
+        <legend class="filter-legend">Category</legend>
+        <div class="filter-pills" role="radiogroup" aria-label="Filter by category">
+          <button
+            type="button"
+            class="filter-pill filter-pill--active"
+            data-filter-type="category"
+            data-filter-value="all"
+            aria-pressed="true"
+          >
+            All
+          </button>
+          {presentCategories.map((cat) => (
+            <button
+              type="button"
+              class="filter-pill"
+              data-filter-type="category"
+              data-filter-value={cat}
+              aria-pressed="false"
+            >
+              {CATEGORY_LABELS[cat]}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+
+      <!-- Status filter -->
+      <fieldset class="filter-group">
+        <legend class="filter-legend">Status</legend>
+        <div class="filter-pills" role="radiogroup" aria-label="Filter by status">
+          <button
+            type="button"
+            class="filter-pill filter-pill--active"
+            data-filter-type="status"
+            data-filter-value="all"
+            aria-pressed="true"
+          >
+            All
+          </button>
+          {presentStatuses.map((status) => (
+            <button
+              type="button"
+              class="filter-pill"
+              data-filter-type="status"
+              data-filter-value={status}
+              aria-pressed="false"
+            >
+              {STATUS_LABELS[status]}
+            </button>
+          ))}
+        </div>
+      </fieldset>
+    </div>
+
+    <!-- ------------------------------------------------------------------ -->
+    <!--  Project Grid                                                       -->
+    <!-- ------------------------------------------------------------------ -->
+    <div class="project-grid" id="project-grid" aria-live="polite" aria-atomic="false">
+      {featuredProjects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+
+    <!-- Empty state shown when no cards match active filters -->
+    <p class="empty-state" id="empty-state" hidden aria-live="polite">
+      No records match the selected filters.
+    </p>
+  </section>
+</BaseLayout>
+
+<!-- ------------------------------------------------------------------ -->
+<!--  Filter Script (vanilla JS, no framework)                          -->
+<!-- ------------------------------------------------------------------ -->
+<script>
+  (() => {
+    const grid       = document.getElementById('project-grid')!;
+    const emptyState = document.getElementById('empty-state') as HTMLParagraphElement;
+    const countBadge = document.getElementById('results-count')!;
+
+    // Track active filter values per type
+    const activeFilters: Record<string, string> = {
+      category: 'all',
+      status:   'all',
+    };
+
+    /**
+     * Returns all project card elements inside the grid.
+     */
+    function getCards(): HTMLElement[] {
+      return Array.from(grid.querySelectorAll<HTMLElement>('[data-category]'));
+    }
+
+    /**
+     * Applies the current activeFilters to every card, toggling
+     * data-hidden so CSS can hide/show without removing from DOM.
+     */
+    function applyFilters(): void {
+      const cards   = getCards();
+      let visible   = 0;
+
+      cards.forEach((card) => {
+        const catMatch    = activeFilters.category === 'all' || card.dataset.category === activeFilters.category;
+        const statusMatch = activeFilters.status   === 'all' || card.dataset.status   === activeFilters.status;
+        const show        = catMatch && statusMatch;
+
+        card.hidden = !show;
+        if (show) visible++;
+      });
+
+      // Update live count badge
+      const label = visible === 1 ? 'record' : 'records';
+      countBadge.textContent = `[${visible} ${label}]`;
+
+      // Toggle empty-state message
+      emptyState.hidden = visible > 0;
+    }
+
+    /**
+     * Handles a filter pill click: updates the active filter for its type,
+     * updates aria-pressed state on all siblings, and re-runs applyFilters.
+     */
+    function handlePillClick(pill: HTMLButtonElement): void {
+      const type  = pill.dataset.filterType!;
+      const value = pill.dataset.filterValue!;
+
+      // Update active filter
+      activeFilters[type] = value;
+
+      // Sync aria-pressed on all pills in this group
+      const siblings = document.querySelectorAll<HTMLButtonElement>(
+        `[data-filter-type="${type}"]`
+      );
+      siblings.forEach((sibling) => {
+        const isActive = sibling.dataset.filterValue === value;
+        sibling.setAttribute('aria-pressed', String(isActive));
+        sibling.classList.toggle('filter-pill--active', isActive);
+      });
+
+      applyFilters();
+    }
+
+    // Attach click listeners to all filter pills
+    document.querySelectorAll<HTMLButtonElement>('.filter-pill').forEach((pill) => {
+      pill.addEventListener('click', () => handlePillClick(pill));
+    });
+
+    // Keyboard: arrow keys navigate within a filter group
+    document.querySelectorAll<HTMLElement>('.filter-pills').forEach((group) => {
+      group.addEventListener('keydown', (e: KeyboardEvent) => {
+        const pills  = Array.from(group.querySelectorAll<HTMLButtonElement>('.filter-pill'));
+        const target = e.target as HTMLButtonElement;
+        const idx    = pills.indexOf(target);
+        if (idx === -1) return;
+
+        let next = -1;
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          next = (idx + 1) % pills.length;
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          next = (idx - 1 + pills.length) % pills.length;
+        }
+
+        if (next !== -1) {
+          e.preventDefault();
+          pills[next].focus();
+        }
+      });
+    });
+  })();
+</script>
+
+<style>
+  /* ------------------------------------------------------------------ */
+  /*  Hero                                                               */
+  /* ------------------------------------------------------------------ */
+
+  .hero-section {
+    padding-block: var(--space-xl) var(--space-2xl);
+    border-bottom: 1px solid var(--color-contour);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .hero-manifest {
+    max-width: var(--content-width);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .hero-title {
+    font-size: var(--text-4xl);
+    font-weight: var(--weight-semibold);
+    letter-spacing: -0.02em;
+    line-height: var(--leading-tight);
+    color: var(--color-ink);
+  }
+
+  .hero-lead {
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Featured section                                                   */
+  /* ------------------------------------------------------------------ */
+
+  .section-featured {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .section-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--color-contour);
+  }
+
+  .section-title {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink);
+  }
+
+  .count-badge {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Filter bar                                                         */
+  /* ------------------------------------------------------------------ */
+
+  .filter-bar {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: var(--space-md);
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-contour);
+    border-radius: var(--border-radius-md);
+  }
+
+  @media (min-width: 640px) {
+    .filter-bar {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: var(--space-xl);
+    }
+  }
+
+  .filter-group {
+    /* Reset fieldset chrome */
+    border: none;
+    margin: 0;
+    padding: 0;
+    min-width: 0;
+  }
+
+  .filter-legend {
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+  }
+
+  .filter-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+  }
+
+  .filter-pill {
+    /* Reset */
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+
+    /* Typography */
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+
+    /* Layout */
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.625rem;
+
+    /* Visual */
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-contour);
+    border-radius: var(--border-radius-sm);
+
+    /* Motion */
+    transition:
+      color var(--duration-fast) var(--ease-out),
+      background-color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .filter-pill:hover {
+    color: var(--color-ink);
+    border-color: var(--color-text-muted);
+    background-color: var(--color-surface-strong);
+  }
+
+  .filter-pill:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: 2px;
+  }
+
+  .filter-pill--active,
+  .filter-pill[aria-pressed="true"] {
+    color: var(--color-ink);
+    background-color: var(--color-surface-strong);
+    border-color: var(--color-focus);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Project grid                                                       */
+  /* ------------------------------------------------------------------ */
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 1024px) {
+    .project-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .project-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Empty state                                                        */
+  /* ------------------------------------------------------------------ */
+
+  .empty-state {
+    padding-block: var(--space-xl);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    border: 1px dashed var(--color-contour);
+    border-radius: var(--border-radius-md);
+  }
+</style>

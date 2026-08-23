@@ -1,0 +1,97 @@
+---
+/**
+ * ArtifactLink — Renders a validated artifact link or status plate.
+ * Only renders active links when a public URL is present.
+ */
+
+import type { ArtifactRecord } from '../schemas/project';
+
+interface Props {
+  artifact: ArtifactRecord;
+}
+
+const { artifact } = Astro.props;
+const isAvailable = artifact.visibility === 'public' && Boolean(artifact.url);
+---
+
+<li class="artifact-item">
+  {isAvailable ? (
+    <a
+      href={artifact.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      class="artifact-link"
+    >
+      <span class="artifact-type-tag">{artifact.type}</span>
+      <span class="artifact-label">{artifact.label}</span>
+      <svg class="artifact-external-icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M3.5 2.5H9.5V8.5M9.5 2.5L2.5 9.5" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" />
+      </svg>
+    </a>
+  ) : (
+    <span class="artifact-unavailable" title={artifact.description || `${artifact.label} (${artifact.visibility})`}>
+      <span class="artifact-type-tag">{artifact.type}</span>
+      <span class="artifact-label">{artifact.label}</span>
+      <span class="artifact-status-badge">[{artifact.visibility}]</span>
+    </span>
+  )}
+</li>
+
+<style>
+  .artifact-item {
+    list-style: none;
+    margin: 0;
+  }
+
+  .artifact-link,
+  .artifact-unavailable {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: var(--space-xs) var(--space-sm);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    border: 1px solid var(--color-contour);
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    transition: border-color var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out), background-color var(--duration-fast) var(--ease-out);
+  }
+
+  .artifact-link {
+    color: var(--color-ink);
+    background-color: var(--color-surface);
+  }
+
+  .artifact-link:hover,
+  .artifact-link:focus-visible {
+    border-color: var(--color-focus);
+    background-color: var(--color-surface-strong);
+    color: var(--color-focus);
+  }
+
+  .artifact-unavailable {
+    color: var(--color-text-muted);
+    border-style: dashed;
+    background-color: transparent;
+    opacity: 0.75;
+  }
+
+  .artifact-type-tag {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .artifact-label {
+    font-weight: var(--weight-medium);
+  }
+
+  .artifact-status-badge {
+    font-size: var(--text-2xs);
+    text-transform: uppercase;
+  }
+
+  .artifact-external-icon {
+    opacity: 0.65;
+  }
+</style>

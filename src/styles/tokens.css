@@ -1,0 +1,87 @@
+/**
+ * Design Tokens — Project Atlas (Light Theme)
+ * AICG/PNW field-survey palette: warm mineral paper, forest-green ink,
+ * restrained gray-green surfaces, and a single calibrated signal accent.
+ *
+ * Dark-theme overrides live in tokens-dark.css; no toggle is exposed in v1.
+ * All color pairs verified against WCAG 2.2 AA contrast minimums.
+ */
+
+:root {
+  /* ------------------------------------------------------------------ */
+  /*  Color — AICG/PNW field-survey palette                             */
+  /* ------------------------------------------------------------------ */
+
+  --color-page:           #f3f4ef;   /* field-paper background           */
+  --color-surface:        #e7ebe4;   /* registry plate / card fill       */
+  --color-surface-strong: #d7dfd5;   /* elevated surface / active state  */
+
+  --color-ink:            #173329;   /* forest ink — headings, emphasis   */
+  --color-text:           #1b2822;   /* primary body text                */
+  --color-text-muted:     #516b5e;   /* secondary text — AA on surface   */
+  --color-contour:        #9daf9f;   /* borders, dividers, contour lines */
+
+  --color-focus:          #245a42;   /* focus rings, interactive accent   */
+  --color-live:           #327354;   /* LIVE status stamp                */
+  --color-warning:        #bd6b18;   /* calibrated Alvord-style signal   */
+  --color-archive:        #7d8780;   /* ARCHIVE status stamp             */
+
+  /* ------------------------------------------------------------------ */
+  /*  Spacing scale (4px base)                                          */
+  /* ------------------------------------------------------------------ */
+
+  --space-2xs: 0.125rem;  /*  2px */
+  --space-xs:  0.25rem;   /*  4px */
+  --space-sm:  0.5rem;    /*  8px */
+  --space-md:  1rem;      /* 16px */
+  --space-lg:  1.5rem;    /* 24px */
+  --space-xl:  2rem;      /* 32px */
+  --space-2xl: 3rem;      /* 48px */
+  --space-3xl: 4rem;      /* 64px */
+  --space-4xl: 6rem;      /* 96px */
+
+  /* ------------------------------------------------------------------ */
+  /*  Typography                                                        */
+  /* ------------------------------------------------------------------ */
+
+  --font-sans: 'Instrument Sans Variable', 'Instrument Sans', system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  --text-2xs: 0.625rem;  /* 10px — stamp labels only   */
+  --text-xs:  0.75rem;   /* 12px — registry IDs, meta  */
+  --text-sm:  0.875rem;  /* 14px — secondary body      */
+  --text-base: 1rem;     /* 16px — primary body        */
+  --text-lg:  1.125rem;  /* 18px — lead paragraphs     */
+  --text-xl:  1.25rem;   /* 20px — section headings    */
+  --text-2xl: 1.5rem;    /* 24px — page subheadings    */
+  --text-3xl: 2rem;      /* 32px — page titles         */
+  --text-4xl: 2.5rem;    /* 40px — hero display        */
+
+  --leading-tight:   1.2;
+  --leading-snug:    1.35;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.65;
+
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+
+  /* ------------------------------------------------------------------ */
+  /*  Layout                                                            */
+  /* ------------------------------------------------------------------ */
+
+  --max-width:       72rem;     /* 1152px */
+  --content-width:   40rem;     /* 640px — prose measure */
+
+  --border-radius-sm:  0.25rem; /* 4px  */
+  --border-radius-md:  0.5rem;  /* 8px  */
+  --border-radius-lg:  0.75rem; /* 12px */
+
+  /* ------------------------------------------------------------------ */
+  /*  Motion — gentle, functional transitions                           */
+  /* ------------------------------------------------------------------ */
+
+  --duration-fast:   120ms;
+  --duration-normal: 200ms;
+  --ease-out: cubic-bezier(0.0, 0.0, 0.2, 1);
+}

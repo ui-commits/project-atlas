@@ -1,0 +1,211 @@
+---
+/**
+ * Project Atlas — Archive Page
+ * Lists all projects with 'archive' or 'local' status.
+ * These are projects that are no longer live or exist only in local
+ * development environments — preserved in the registry for historical
+ * reference and field documentation.
+ */
+
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { CATEGORY_LABELS, STATUS_LABELS } from '../lib/registry';
+
+const allProjects = await getCollection('projects');
+
+// Archive includes 'archive' and 'local' status projects
+const archivedProjects = allProjects
+  .filter((p) => p.data.status === 'archive' || p.data.status === 'local')
+  .sort((a, b) => a.data.registryId.localeCompare(b.data.registryId));
+
+// Group by status for the section breakdown
+const byStatus = archivedProjects.reduce<Record<string, typeof archivedProjects>>(
+  (acc, project) => {
+    const s = project.data.status;
+    if (!acc[s]) acc[s] = [];
+    acc[s].push(project);
+    return acc;
+  },
+  {}
+);
+
+// Ordered status groups: archive first, then local
+const statusOrder = (['archive', 'local'] as const).filter((s) => byStatus[s]?.length > 0);
+---
+
+<BaseLayout
+  title="Archive — Project Atlas"
+  description="Archived and locally-stored projects from the Project Atlas registry. Historical records of past creative engineering systems, deprecated tools, and local-only experiments."
+>
+  <!-- ------------------------------------------------------------------ -->
+  <!--  Page header                                                        -->
+  <!-- ------------------------------------------------------------------ -->
+  <section class="page-header" aria-labelledby="page-heading">
+    <div class="page-header-content">
+      <span class="label">Registry Archive</span>
+      <h1 id="page-heading" class="page-title">Archive</h1>
+      <p class="page-lead">
+        Preserved records of deprecated, sunset, and locally-scoped engineering systems.
+        These entries are retained in the registry for historical reference and
+        field documentation purposes.
+      </p>
+    </div>
+  </section>
+
+  <!-- ------------------------------------------------------------------ -->
+  <!--  Archive contents                                                   -->
+  <!-- ------------------------------------------------------------------ -->
+  {archivedProjects.length === 0 ? (
+    <section class="archive-body" aria-label="Archive records">
+      <p class="empty-archive">
+        No archived records found in the current registry.
+      </p>
+    </section>
+  ) : (
+    <section class="archive-body" aria-labelledby="archive-records-heading">
+      <div class="archive-summary">
+        <span class="mono count-badge">[{archivedProjects.length} {archivedProjects.length === 1 ? 'record' : 'records'}]</span>
+      </div>
+
+      {statusOrder.map((status) => (
+        <div class="status-group">
+          <div class="status-group-header">
+            <h2 class="status-group-title" id={`group-${status}`}>
+              {STATUS_LABELS[status]}
+            </h2>
+            <span class="mono group-count">[{byStatus[status].length}]</span>
+          </div>
+
+          <div class="project-grid" aria-labelledby={`group-${status}`}>
+            {byStatus[status].map((project) => (
+              <ProjectCard project={project} />
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+  )}
+</BaseLayout>
+
+<style>
+  /* ------------------------------------------------------------------ */
+  /*  Page header — mirrors index hero style                             */
+  /* ------------------------------------------------------------------ */
+
+  .page-header {
+    padding-block: var(--space-xl) var(--space-2xl);
+    border-bottom: 1px solid var(--color-contour);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .page-header-content {
+    max-width: var(--content-width);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .page-title {
+    font-size: var(--text-4xl);
+    font-weight: var(--weight-semibold);
+    letter-spacing: -0.02em;
+    line-height: var(--leading-tight);
+    color: var(--color-ink);
+  }
+
+  .page-lead {
+    font-size: var(--text-lg);
+    line-height: var(--leading-relaxed);
+    color: var(--color-text);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Archive body                                                       */
+  /* ------------------------------------------------------------------ */
+
+  .archive-body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xl);
+  }
+
+  .archive-summary {
+    display: flex;
+    align-items: center;
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--color-contour);
+  }
+
+  .count-badge {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Status group — section per status value                           */
+  /* ------------------------------------------------------------------ */
+
+  .status-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .status-group-header {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-sm);
+    padding-bottom: var(--space-xs);
+    border-bottom: 1px solid var(--color-contour);
+  }
+
+  .status-group-title {
+    font-size: var(--text-xl);
+    font-weight: var(--weight-semibold);
+    color: var(--color-ink);
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+  }
+
+  .group-count {
+    font-size: var(--text-xs);
+    color: var(--color-text-muted);
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Project grid — matches index.astro grid                           */
+  /* ------------------------------------------------------------------ */
+
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  @media (min-width: 1024px) {
+    .project-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .project-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  /* ------------------------------------------------------------------ */
+  /*  Empty state                                                        */
+  /* ------------------------------------------------------------------ */
+
+  .empty-archive {
+    padding-block: var(--space-2xl);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    color: var(--color-text-muted);
+    border: 1px dashed var(--color-contour);
+    border-radius: var(--border-radius-md);
+  }
+</style>

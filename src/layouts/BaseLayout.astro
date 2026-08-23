@@ -1,0 +1,57 @@
+---
+/**
+ * BaseLayout — Root document layout for Project Atlas.
+ * Provides the HTML shell, skip navigation, site header, and footer.
+ * All pages compose through the default <slot />.
+ *
+ * Global styles are imported once here and cascade to all pages.
+ */
+
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = 'A living registry of creative engineering projects — systems visualization, design systems, agent orchestration, and developer tools.',
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <header class="site-header">
+      <a href="/" class="site-title">Project Atlas</a>
+      <nav class="site-nav" aria-label="Site navigation">
+        <a href="/archive" class="nav-link">Archive</a>
+      </nav>
+    </header>
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <a
+          href="https://github.com/ui-commits"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          GitHub
+        </a>
+      </p>
+    </footer>
+  </body>
+</html>

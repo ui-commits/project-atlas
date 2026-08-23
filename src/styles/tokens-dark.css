@@ -1,0 +1,25 @@
+/**
+ * Dark Theme Token Overrides — Project Atlas
+ * Applied via [data-theme="dark"] on <html>.
+ *
+ * NOT exposed to users in v1. The token layer is dark-ready so that
+ * adding a theme switch later requires no structural CSS changes.
+ *
+ * All color pairs verified against WCAG 2.2 AA contrast minimums.
+ */
+
+[data-theme='dark'] {
+  --color-page:           #131a16;
+  --color-surface:        #1c2620;
+  --color-surface-strong: #26332c;
+
+  --color-ink:            #d4e4da;
+  --color-text:           #cddbd3;
+  --color-text-muted:     #8fa498;
+  --color-contour:        #3d5247;
+
+  --color-focus:          #5fb88e;
+  --color-live:           #6cc599;
+  --color-warning:        #e0944a;
+  --color-archive:        #8a968d;
+}

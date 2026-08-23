@@ -1,0 +1,81 @@
+/**
+ * Typography — Project Atlas
+ * Type scale, font stacks, and semantic text styles.
+ *
+ * Sans:  Instrument Sans Variable — primary text, headings
+ * Mono:  IBM Plex Mono — registry IDs, metadata, stamps, artifacts
+ *
+ * Monospace usage is restrained: IDs, labels, status stamps, and
+ * code-adjacent metadata only. Body text and descriptions use sans.
+ */
+
+/* ------------------------------------------------------------------ */
+/*  Base                                                               */
+/* ------------------------------------------------------------------ */
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--weight-regular);
+  line-height: var(--leading-normal);
+  color: var(--color-text);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Headings                                                           */
+/* ------------------------------------------------------------------ */
+
+h1, h2, h3, h4 {
+  font-weight: var(--weight-semibold);
+  line-height: var(--leading-tight);
+  color: var(--color-ink);
+}
+
+h1 { font-size: var(--text-3xl); }
+h2 { font-size: var(--text-2xl); }
+h3 { font-size: var(--text-xl); }
+h4 { font-size: var(--text-lg); }
+
+/* ------------------------------------------------------------------ */
+/*  Links                                                              */
+/* ------------------------------------------------------------------ */
+
+a {
+  color: var(--color-focus);
+  text-underline-offset: 0.15em;
+}
+
+a:hover,
+a:focus-visible {
+  color: var(--color-live);
+}
+
+/* ------------------------------------------------------------------ */
+/*  Focus indicator                                                    */
+/* ------------------------------------------------------------------ */
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------------ */
+/*  Utility classes                                                    */
+/* ------------------------------------------------------------------ */
+
+/** Mono text for registry IDs, metadata stamps. */
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  letter-spacing: 0.02em;
+}
+
+/** Small uppercase label — categories, section headers, legends. */
+.label {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
