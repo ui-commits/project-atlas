@@ -17,7 +17,7 @@ import { projectSchema } from './schemas/project';
 /* ------------------------------------------------------------------ */
 
 const projects = defineCollection({
-  loader: glob({ pattern: '**/*.md', base: './src/content/projects' }),
+  loader: glob({ pattern: '*.md', base: './src/content/projects' }),
   schema: projectSchema,
 });
 

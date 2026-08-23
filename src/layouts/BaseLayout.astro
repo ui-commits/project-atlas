@@ -9,6 +9,7 @@
 
 import '../styles/global.css';
 import PreviewModal from '../components/PreviewModal.astro';
+import ProjectDrawer from '../components/ProjectDrawer.astro';
 
 interface Props {
   title: string;
@@ -56,6 +57,7 @@ const {
     </footer>
 
     <PreviewModal />
+    <ProjectDrawer />
 
     <script>
       /**
@@ -138,6 +140,257 @@ const {
           // Restore focus
           lastFocusedElement?.focus();
           lastFocusedElement = null;
+        }
+      })();
+    </script>
+
+    <script>
+      /**
+       * Project Drawer Controller
+       * Handles opening/closing the slide-out project drawer, populating
+       * its content from embedded JSON, keyboard navigation, and focus trapping.
+       */
+      (function initProjectDrawer() {
+        // ----------------------------------------------------------------
+        // Element refs
+        // ----------------------------------------------------------------
+        const drawer = document.getElementById('project-drawer') as HTMLElement | null;
+        if (!drawer) return;
+
+        const panel = drawer.querySelector('.drawer-panel') as HTMLElement | null;
+        const titleEl        = drawer.querySelector('#drawer-title') as HTMLElement | null;
+        const registryIdEl   = drawer.querySelector('#drawer-registry-id') as HTMLElement | null;
+        const yearEl         = drawer.querySelector('#drawer-year') as HTMLElement | null;
+        const badgesEl       = drawer.querySelector('#drawer-badges') as HTMLElement | null;
+        const summaryEl      = drawer.querySelector('#drawer-summary') as HTMLElement | null;
+        const whyEl          = drawer.querySelector('#drawer-why') as HTMLElement | null;
+        const tagsEl         = drawer.querySelector('#drawer-tags') as HTMLElement | null;
+        const tagsSection    = drawer.querySelector('#drawer-tags-section') as HTMLElement | null;
+        const artifactsEl    = drawer.querySelector('#drawer-artifacts') as HTMLElement | null;
+        const artifactsSection = drawer.querySelector('#drawer-artifacts-section') as HTMLElement | null;
+        const dossierLink    = drawer.querySelector('#drawer-dossier-link') as HTMLAnchorElement | null;
+        const liveLink       = drawer.querySelector('#drawer-live-link') as HTMLAnchorElement | null;
+
+        if (
+          !panel || !titleEl || !registryIdEl || !yearEl || !badgesEl ||
+          !summaryEl || !whyEl || !tagsEl || !tagsSection ||
+          !artifactsEl || !artifactsSection || !dossierLink || !liveLink
+        ) return;
+
+        // Category display labels
+        const CATEGORY_LABELS: Record<string, string> = {
+          'ui-systems': 'UI Systems',
+          'runtime-systems': 'Runtime Systems',
+          'agents-automation': 'Agents & Automation',
+          'tools-analysis': 'Tools & Analysis',
+          'developer-tools': 'Developer Tools',
+          'creative-experiments': 'Creative Experiments',
+          'personal-context': 'Personal Context',
+        };
+
+        let lastFocusedElement: HTMLElement | null = null;
+        let isOpen = false;
+
+        // ----------------------------------------------------------------
+        // Open drawer on card media click
+        // ----------------------------------------------------------------
+        document.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          const trigger = target.closest('[data-open-drawer]') as HTMLElement | null;
+          if (!trigger) return;
+
+          const raw = trigger.dataset.project;
+          if (!raw) return;
+
+          let projectData: Record<string, unknown>;
+          try {
+            projectData = JSON.parse(raw) as Record<string, unknown>;
+          } catch {
+            console.error('[ProjectDrawer] Failed to parse project data JSON');
+            return;
+          }
+
+          e.preventDefault();
+          openDrawer(projectData);
+        });
+
+        // ----------------------------------------------------------------
+        // Close on backdrop / close button
+        // ----------------------------------------------------------------
+        drawer.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          if (target.closest('[data-drawer-close]')) {
+            closeDrawer();
+          }
+        });
+
+        // ----------------------------------------------------------------
+        // ESC key — only close the drawer (modal controller handles preview)
+        // ----------------------------------------------------------------
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && isOpen) {
+            closeDrawer();
+          }
+        });
+
+        // ----------------------------------------------------------------
+        // Focus trap inside drawer panel
+        // ----------------------------------------------------------------
+        drawer.addEventListener('keydown', (e) => {
+          if (e.key !== 'Tab' || !isOpen) return;
+
+          const focusable = panel?.querySelectorAll<HTMLElement>(
+            'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+          );
+          if (!focusable || focusable.length === 0) return;
+
+          const first = focusable[0];
+          const last  = focusable[focusable.length - 1];
+
+          if (!first || !last) return;
+
+          if (e.shiftKey) {
+            if (document.activeElement === first) {
+              e.preventDefault();
+              last.focus();
+            }
+          } else {
+            if (document.activeElement === last) {
+              e.preventDefault();
+              first.focus();
+            }
+          }
+        });
+
+        // ----------------------------------------------------------------
+        // Populate + open
+        // ----------------------------------------------------------------
+        function openDrawer(data: Record<string, unknown>) {
+          lastFocusedElement = document.activeElement as HTMLElement;
+
+          // Title
+          if (titleEl) titleEl.textContent = String(data.title ?? '');
+
+          // Header meta
+          if (registryIdEl) registryIdEl.textContent = String(data.registryId ?? '');
+          if (yearEl) yearEl.textContent = String(data.year ?? '');
+
+          // Badges — category + status
+          if (badgesEl) {
+            const category = String(data.category ?? '');
+            const status   = String(data.status ?? '');
+            const categoryLabel = CATEGORY_LABELS[category] ?? category;
+
+            const statusClass = status === 'live'
+              ? 'drawer-badge--status-live'
+              : status === 'in-progress'
+                ? 'drawer-badge--status-in-progress'
+                : status === 'archive'
+                  ? 'drawer-badge--status-archive'
+                  : '';
+
+            badgesEl.innerHTML = [
+              `<span class="drawer-badge">${escHtml(categoryLabel)}</span>`,
+              `<span class="drawer-badge ${escHtml(statusClass)}">${escHtml(status.toUpperCase())}</span>`,
+            ].join('');
+          }
+
+          // Body copy
+          if (summaryEl)  summaryEl.textContent  = String(data.summary ?? '');
+          if (whyEl)      whyEl.textContent       = String(data.whyItMatters ?? '');
+
+          // Tags
+          const tags = Array.isArray(data.tags) ? (data.tags as string[]) : [];
+          if (tagsSection && tagsEl) {
+            if (tags.length > 0) {
+              tagsEl.innerHTML = tags
+                .map((t) => `<span class="drawer-tag" role="listitem">${escHtml(t)}</span>`)
+                .join('');
+              tagsSection.hidden = false;
+            } else {
+              tagsSection.hidden = true;
+            }
+          }
+
+          // Artifacts
+          type Artifact = { label: string; type: string; url?: string; visibility?: string };
+          const artifacts = Array.isArray(data.artifacts) ? (data.artifacts as Artifact[]) : [];
+          if (artifactsSection && artifactsEl) {
+            if (artifacts.length > 0) {
+              artifactsEl.innerHTML = artifacts.map((a) => {
+                const isPrivate = a.visibility === 'private' || !a.url;
+                const liClass = isPrivate ? 'drawer-artifact drawer-artifact--private' : 'drawer-artifact';
+                const linkHtml = a.url && !isPrivate
+                  ? `<a href="${escHtml(a.url)}" target="_blank" rel="noopener noreferrer" class="drawer-artifact-link">
+                      ${escHtml(a.label)}
+                      <span class="drawer-artifact-type">${escHtml(a.type)}</span>
+                    </a>`
+                  : `<span class="drawer-artifact-link" aria-disabled="true">
+                      ${escHtml(a.label)}
+                      <span class="drawer-artifact-type">${escHtml(a.type)}</span>
+                    </span>`;
+                return `<li class="${liClass}" role="listitem">${linkHtml}</li>`;
+              }).join('');
+              artifactsSection.hidden = false;
+            } else {
+              artifactsSection.hidden = true;
+            }
+          }
+
+          // Footer actions
+          const slug    = String(data.slug ?? '');
+          const liveUrl = typeof data.liveUrl === 'string' ? data.liveUrl : null;
+
+          if (dossierLink) dossierLink.href = `/projects/${slug}`;
+          if (liveLink) {
+            if (liveUrl) {
+              liveLink.href = liveUrl;
+              liveLink.hidden = false;
+            } else {
+              liveLink.hidden = true;
+            }
+          }
+
+          // Show drawer
+          isOpen = true;
+          // drawer is guaranteed non-null by the early return guard above
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          drawer!.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+
+          // Scroll drawer body to top
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const body = drawer!.querySelector('.drawer-body') as HTMLElement | null;
+          if (body) body.scrollTop = 0;
+
+          // Focus the close button
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          const closeBtn = drawer!.querySelector<HTMLElement>('[data-drawer-close]:not(.drawer-backdrop)');
+          closeBtn?.focus();
+        }
+
+        // ----------------------------------------------------------------
+        // Close
+        // ----------------------------------------------------------------
+        function closeDrawer() {
+          isOpen = false;
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          drawer!.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          lastFocusedElement?.focus();
+          lastFocusedElement = null;
+        }
+
+        // ----------------------------------------------------------------
+        // HTML-escape helper (prevents XSS from project data values)
+        // ----------------------------------------------------------------
+        function escHtml(str: string): string {
+          return str
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
         }
       })();
     </script>

@@ -2,35 +2,39 @@
 title: "StateMan / Heartbeat Monitor"
 registryId: "PRJ-009"
 category: "tools-analysis"
-status: "local"
-availability: "pending"
-featured: false
+status: "live"
+availability: "public"
+featured: true
 year: 2026
-summary: "A deterministic state machine manager paired with a real-time heartbeat monitoring surface, enabling fine-grained visibility into state transitions and system liveness across distributed services."
-whyItMatters: "Pairs the correctness guarantees of formal state machines with an operational health dashboard — so teams can prove their services are in a valid state, not just that they're responding to pings."
+summary: "An immersive telemetry dashboard for monitoring global sentinel-node latency, packet loss, health, and operational status, with interactive diagnostics and audio feedback."
+whyItMatters: "Pairs the correctness guarantees of formal state machines with an operational health dashboard — proving services are in valid states, not just responding to pings."
+liveUrl: "https://stateman-sigma.vercel.app"
+githubUrl: "https://github.com/ui-commits/StateMan"
 tags:
   - "State Machines"
   - "Monitoring"
   - "TypeScript"
   - "Telemetry"
-  - "Distributed Systems"
+  - "Diagnostics"
 artifacts:
   - label: "README"
     type: "readme"
-    visibility: "pending"
-  - label: "Architecture"
-    type: "architecture"
-    visibility: "pending"
+    url: "https://github.com/ui-commits/StateMan#readme"
+    visibility: "public"
+  - label: "Source"
+    type: "source"
+    url: "https://github.com/ui-commits/StateMan"
+    visibility: "public"
 related:
   - "runtimedistr"
   - "xstatepro"
   - "detrun"
 ---
 
-StateMan / Heartbeat Monitor combines a deterministic XState-compatible state machine registry with a live heartbeat dashboard — surfacing exactly which services are alive, which state they occupy, and which transitions they've recently traversed.
+StateMan / Heartbeat Monitor combines a deterministic state machine registry with a live telemetry surface — surfacing latency, packet loss, and state transition histories across distributed nodes.
 
 ### Core Capabilities
 
-- **State Machine Registry:** Centralized store for active machine instances with transition history, current state snapshot, and event log per registered service.
-- **Heartbeat Dashboard:** Real-time liveness grid with configurable thresholds — distinguishing between stalled machines and truly offline services.
-- **Transition Diffing:** Side-by-side comparison of state transition paths between two time windows, revealing drift and regression in service behavior.
+- **Sentinel Node Monitoring:** Real-time health matrix tracking latency variance and uptime across global sentinel nodes.
+- **Audio Diagnostics:** Audio-frequency acoustic feedback providing auditory channels for operational state shifts.
+- **Transition Diffing:** Side-by-side comparison of state machine transition paths to detect behavioral drift.

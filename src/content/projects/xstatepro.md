@@ -2,35 +2,39 @@
 title: "Xstatepro"
 registryId: "PRJ-011"
 category: "agents-automation"
-status: "local"
-availability: "pending"
+status: "live"
+availability: "public"
 featured: false
 year: 2026
-summary: "An XState-based agent behavior framework that models autonomous decision logic as typed statecharts, enabling formal verification of agent state transitions before runtime deployment."
-whyItMatters: "Applies the mathematical rigor of statechart theory to agent design — replacing implicit prompt-driven logic with explicit, testable state graphs that can be verified, visualized, and audited."
+summary: "An XState v5-powered runtime explorer using a subway-style transit map, branch/fork interactions, telemetry, adaptive routing, and Gruvbox themes."
+whyItMatters: "An unusually playful and tactile way to make formal state-machine navigation and runtime state graphs tangible and engaging."
+liveUrl: "https://xstatepro.vercel.app"
+githubUrl: "https://github.com/ui-commits/Xstatepro"
 tags:
-  - "XState"
+  - "XState v5"
+  - "Transit Map"
   - "State Machines"
-  - "Agents"
   - "TypeScript"
-  - "Formal Verification"
+  - "Vite"
 artifacts:
   - label: "README"
     type: "readme"
-    visibility: "pending"
-  - label: "Architecture"
-    type: "architecture"
-    visibility: "pending"
+    url: "https://github.com/ui-commits/Xstatepro#readme"
+    visibility: "public"
+  - label: "Source"
+    type: "source"
+    url: "https://github.com/ui-commits/Xstatepro"
+    visibility: "public"
 related:
+  - "xxrun"
   - "stateman-heartbeat-monitor"
   - "detrun"
-  - "agentos"
 ---
 
-Xstatepro applies XState v5 statechart modeling to autonomous agent behavior — defining agent decision logic as typed, visualizable state graphs with guarded transitions, parallel states, and actor-model message passing.
+Xstatepro translates complex XState v5 statecharts into an intuitive subway-line transit diagram, letting users traverse branches, fork states, and view runtime telemetry along each transit route.
 
 ### Core Capabilities
 
-- **Typed Statecharts:** Agent behavior defined as strict TypeScript state machine definitions with full compile-time transition validation.
-- **Parallel State Regions:** Model concurrent agent sub-tasks as parallel states, with automatic synchronization barriers at join points.
-- **Formal Test Generation:** Statechart topology auto-generates path coverage test cases — ensuring all reachable agent states are exercised before deployment.
+- **Subway Transit Metaphor:** Interconnected state lines and transfer stations representing nested actors and state transitions.
+- **Dynamic Branch & Forking:** Interactively branch execution paths to simulate alternative actor behaviors.
+- **Adaptive Gruvbox Styling:** Rich high-contrast palette calibrated for code legibility and dark-mode clarity.

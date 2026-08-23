@@ -3,6 +3,15 @@
  * ProjectCard — Compact, accessible project card for the Atlas registry.
  * Renders thumbnail or RegistryPlate, registry accession ID, category,
  * status stamp, summary clamped to 2 lines, and distinct destination actions.
+ *
+ * Thumbnail priority:
+ *   1. data.thumbnail (explicit custom image)
+ *   2. Microlink screenshot API (when liveUrl present, no custom thumbnail)
+ *   3. RegistryPlate (fallback — no liveUrl, or screenshot load fails)
+ *
+ * The card-media area is a clickable button that opens the ProjectDrawer.
+ * Serialised project data is embedded in a data attribute so the drawer
+ * controller can hydrate without a separate API call.
  */
 
 import type { CollectionEntry } from 'astro:content';
@@ -17,11 +26,51 @@ interface Props {
 const { project } = Astro.props;
 const { data, id: slug } = project;
 const categoryLabel = CATEGORY_LABELS[data.category] || data.category;
+
+/**
+ * Build the Microlink screenshot embed URL for a given live URL.
+ * Returns undefined if no liveUrl is provided.
+ */
+const microlinkScreenshotUrl = (!data.thumbnail && data.liveUrl)
+  ? `https://api.microlink.io/?url=${encodeURIComponent(data.liveUrl)}&screenshot=true&meta=false&embed=screenshot.url`
+  : undefined;
+
+/**
+ * Serialise the subset of data the drawer needs.
+ * All values are validated frontmatter primitives — safe to JSON.stringify.
+ */
+const drawerData = JSON.stringify({
+  slug,
+  title: data.title,
+  registryId: data.registryId,
+  category: data.category,
+  status: data.status,
+  year: data.year,
+  summary: data.summary,
+  whyItMatters: data.whyItMatters,
+  tags: data.tags,
+  artifacts: data.artifacts,
+  liveUrl: data.liveUrl ?? null,
+  githubUrl: data.githubUrl ?? null,
+});
 ---
 
-<article class="project-card" data-category={data.category} data-status={data.status}>
-  <div class="card-media">
+<article
+  class="project-card"
+  data-category={data.category}
+  data-status={data.status}
+  data-slug={slug}
+>
+  <!-- Card media: clicking opens ProjectDrawer for a quick-view -->
+  <button
+    type="button"
+    class="card-media"
+    aria-label={`Quick view ${data.title}`}
+    data-open-drawer
+    data-project={drawerData}
+  >
     {data.thumbnail ? (
+      /* Priority 1: explicit custom thumbnail */
       <img
         src={data.thumbnail.src}
         alt={data.thumbnail.alt}
@@ -31,14 +80,41 @@ const categoryLabel = CATEGORY_LABELS[data.category] || data.category;
         decoding="async"
         class="card-thumbnail"
       />
+    ) : microlinkScreenshotUrl ? (
+      /* Priority 2: Microlink live screenshot — RegistryPlate shown on error */
+      <div class="card-screenshot-wrapper">
+        <img
+          src={microlinkScreenshotUrl}
+          alt={`Screenshot of ${data.title}`}
+          loading="lazy"
+          decoding="async"
+          class="card-thumbnail card-screenshot"
+          onerror="this.closest('.card-screenshot-wrapper').classList.add('screenshot-failed')"
+        />
+        <div class="card-screenshot-fallback" aria-hidden="true">
+          <RegistryPlate
+            registryId={data.registryId}
+            category={data.category}
+            status={data.status}
+          />
+        </div>
+      </div>
     ) : (
+      /* Priority 3: no liveUrl — RegistryPlate only */
       <RegistryPlate
         registryId={data.registryId}
         category={data.category}
         status={data.status}
       />
     )}
-  </div>
+    <div class="card-media-hint" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M8 3C4.5 3 1.73 5.11 1 8c.73 2.89 3.5 5 7 5s6.27-2.11 7-5c-.73-2.89-3.5-5-7-5z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      Quick view
+    </div>
+  </button>
 
   <div class="card-body">
     <div class="card-meta">
@@ -128,12 +204,73 @@ const categoryLabel = CATEGORY_LABELS[data.category] || data.category;
     aspect-ratio: 16 / 10;
     overflow: hidden;
     background-color: var(--color-surface-strong);
+    /* Reset button defaults */
+    display: block;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+    position: relative;
+  }
+
+  /* Quick-view hint overlay — appears on hover */
+  .card-media-hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    color: #fff;
+    background: rgba(23, 51, 41, 0.55);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity var(--duration-fast) var(--ease-out);
+    pointer-events: none;
+  }
+
+  .card-media:hover .card-media-hint,
+  .card-media:focus-visible .card-media-hint {
+    opacity: 1;
+  }
+
+  .card-media:focus-visible {
+    outline: 2px solid var(--color-focus);
+    outline-offset: -2px;
   }
 
   .card-thumbnail {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  /* Screenshot wrapper: stacks the <img> and the RegistryPlate fallback.
+     On load failure, onerror adds .screenshot-failed which hides the broken
+     image and reveals the fallback beneath it. */
+  .card-screenshot-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .card-screenshot {
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-screenshot-fallback {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  /* When the screenshot fails to load, hide the broken img so the
+     RegistryPlate fallback beneath it becomes visible. */
+  .card-screenshot-wrapper.screenshot-failed .card-screenshot {
+    display: none;
   }
 
   .card-body {

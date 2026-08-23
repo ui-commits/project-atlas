@@ -3,23 +3,25 @@ title: "PNW / AICG UI Kit"
 registryId: "PRJ-006"
 category: "ui-systems"
 status: "live"
-availability: "pending"
+availability: "public"
 featured: false
 year: 2026
-summary: "A field-survey-inspired design system derived from Pacific Northwest terrain palettes and AICG color science, delivering a cohesive dark-mode-first token set for operational interfaces."
-whyItMatters: "Translates the high-contrast, high-information density of field cartography into a UI token vocabulary that makes complex data interfaces feel grounded and readable rather than clinical."
+summary: "A professional design system for orchestrated workflows and intelligent infrastructure, presenting five calibrated palettes including Timberline Canopy and Alvord Basalt."
+whyItMatters: "Translates the high-contrast density of field cartography into an accessible, production-ready design system with theme switching and full component documentation."
+liveUrl: "https://pnw-theme-ui-kit.vercel.app/"
 tags:
   - "Design System"
   - "Color Science"
-  - "Dark Mode"
+  - "AICG"
   - "Tokens"
-  - "Operational UI"
+  - "Theme Switching"
 artifacts:
-  - label: "README"
-    type: "readme"
-    visibility: "pending"
-  - label: "Demo"
+  - label: "Showcase"
     type: "demo"
+    url: "https://pnw-theme-ui-kit.vercel.app/"
+    visibility: "public"
+  - label: "Source"
+    type: "source"
     visibility: "pending"
 related:
   - "rosetta-ui-kit"
@@ -27,10 +29,10 @@ related:
   - "oswego-park-ui-kit"
 ---
 
-PNW / AICG UI Kit distills Pacific Northwest field-survey aesthetics and AICG color science research into a production-ready token system — dark-mode-first, high-contrast, and purpose-built for dense operational dashboards.
+The AICG / PNW UI Kit is a professional design system engineered for orchestrated workflows, intelligent infrastructure, and forward-deployed agentic systems.
 
 ### Core Capabilities
 
-- **Field-Survey Palette:** Color tokens derived from AICG terrain chromaticity studies, yielding a palette that reads clearly at any ambient light level.
-- **Dark-Mode-First Architecture:** All tokens authored in dark context first, with light overrides as a secondary pass — reversing the typical web default to match operational tooling needs.
-- **Semantic Token Hierarchy:** Three-tier token model (primitive → semantic → component) ensures consistent theming without per-component overrides.
+- **Five Calibrated Palettes:** Timberline Canopy, Haystack Monolith, Alvord Basalt, Blueprint Core, and Foundry Fern.
+- **Field-Survey Cartography:** High-contrast, terrain-grounded visual grammar delivering immediate readability across dense operational dashboards.
+- **Token Architecture:** Three-tier token model (primitive → semantic → component) ensuring rigorous theme switching and accessibility.

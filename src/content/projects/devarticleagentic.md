@@ -6,31 +6,27 @@ status: "archive"
 availability: "pending"
 featured: false
 year: 2026
-summary: "An archived agentic pipeline for automated technical article generation, combining research agents, outline planners, and editorial review loops to produce structured long-form developer content."
-whyItMatters: "Explored the boundary between agentic drafting and editorial quality — demonstrating that multi-agent pipelines with structured review loops can produce coherent technical content, while identifying the friction points where human editorial judgment remains indispensable."
+summary: "Archived research exploration and early prototypes for agentic article generation and autonomous content synthesis workflows."
+whyItMatters: "Represents early prototype iterations that informed subsequent visual agent orchestration pipelines in Meridian and AgentOS."
 tags:
-  - "Agents"
-  - "Content Generation"
-  - "TypeScript"
-  - "LLM"
   - "Archive"
+  - "Agents"
+  - "Content Synthesis"
+  - "Research"
 artifacts:
-  - label: "README"
-    type: "readme"
-    visibility: "pending"
-  - label: "Architecture"
-    type: "architecture"
-    visibility: "pending"
+  - label: "Source"
+    type: "source"
+    url: "https://github.com/ui-commits/meridian"
+    description: "Legacy prototype branch preserved in Meridian repository"
+    visibility: "public"
 related:
+  - "meridian-agent-studio-os"
   - "agentos"
-  - "voluble-babka"
-  - "xx-ledger-orchestrator"
 ---
 
-devArticleAgentic was an agentic pipeline for producing structured technical articles — orchestrating a research agent, outline planner, section-level drafting agents, and a final editorial review loop into a single end-to-end content production workflow. Now archived as a reference implementation.
+devArticleAgentic is an archived experimental prototype exploring automated agentic article synthesis and structured content assembly.
 
-### Core Capabilities
+### Archival Context
 
-- **Multi-Agent Pipeline:** Sequential agent stages (research → outline → draft → review) with typed handoff contracts between each stage, preventing malformed intermediate artifacts from propagating.
-- **Editorial Review Loop:** A dedicated review agent evaluated drafts against a rubric of technical accuracy, readability, and structural completeness — returning structured feedback rather than free-form critique.
-- **Archive Value:** The pipeline's archived state preserves a concrete record of what multi-agent content generation achieved at this point in LLM development, useful as a baseline for future comparisons.
+- **Historical Iteration:** Early research codebase that established foundational requirements for multi-step agent tool invocation.
+- **Lineage:** Concepts from this project were formalized and integrated into the visual workflow engines of Meridian and AgentOS.

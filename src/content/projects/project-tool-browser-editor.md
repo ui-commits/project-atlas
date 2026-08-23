@@ -1,35 +1,37 @@
 ---
-title: "Project Tool / Browser Editor"
+title: "Project Tool / Browser Code Editor"
 registryId: "PRJ-015"
 category: "developer-tools"
 status: "live"
-availability: "pending"
+availability: "public"
 featured: false
 year: 2026
-summary: "A browser-native project scaffolding and editing environment that lets developers create, configure, and iterate on project structures entirely within the browser — no local toolchain required."
-whyItMatters: "Removes the local environment setup barrier for new projects and rapid prototyping, enabling instant zero-install scaffolding directly in the browser with full project structure and config generation."
+summary: "A browser-based JavaScript code editor with multi-file tabs, import/export, split view, integrated terminal, command palette, autosave, and in-browser execution."
+whyItMatters: "A compact, immediately understandable developer-tool prototype providing zero-install code editing and execution in pure browser runtime."
+liveUrl: "https://project-tool-ebon.vercel.app/"
 tags:
-  - "Browser Tools"
-  - "Developer Experience"
-  - "Scaffolding"
-  - "TypeScript"
-  - "Zero-Install"
+  - "Developer Tools"
+  - "Code Editor"
+  - "In-Browser Execution"
+  - "JavaScript"
+  - "Tabs & Split View"
 artifacts:
-  - label: "README"
-    type: "readme"
-    visibility: "pending"
-  - label: "Demo"
+  - label: "Showcase"
     type: "demo"
+    url: "https://project-tool-ebon.vercel.app/"
+    visibility: "public"
+  - label: "Source"
+    type: "source"
     visibility: "pending"
 related:
   - "codecompare-cli-night-forest"
-  - "devarticleagentic"
+  - "devprofile-terminal"
 ---
 
-Project Tool / Browser Editor is a fully browser-based scaffolding and editing environment — enabling developers to define project structure, configure tooling, and generate complete starter scaffolds without installing anything locally.
+Project Tool / Browser Code Editor delivers a full-featured coding sandbox running entirely within client-side browser runtime.
 
 ### Core Capabilities
 
-- **Browser-Native File System:** Uses the File System Access API to read and write project files directly from the browser, with a tree-based navigator mirroring local directory structure.
-- **Config Generator:** Interactive form-driven config generation for common tooling (TypeScript, ESLint, Prettier, Astro, Vite) producing correctly structured config files without memorizing schemas.
-- **Template Engine:** Parameterized project templates that scaffold complete directory structures on demand, with live preview of the generated file tree before writing.
+- **Multi-File Workspace:** Tabbed workspace supporting multi-file editing, directory import/export, and split-pane viewing.
+- **In-Browser Execution:** Run JavaScript code directly with live output stream capture in the embedded console terminal.
+- **Command Palette:** Keyboard-driven actions for rapid file switching, formatting, and editor layout adjustments.

@@ -1,35 +1,37 @@
 ---
-title: "CodeCompare CLI / Night Forest"
+title: "CodeCompare CLI / Night Forest Analytics"
 registryId: "PRJ-014"
 category: "tools-analysis"
 status: "live"
-availability: "pending"
+availability: "public"
 featured: false
 year: 2026
-summary: "A terminal-native code diffing and analysis CLI with a Night Forest dark theme, providing semantic-aware diff rendering, symbol-level change summaries, and inline annotation support."
-whyItMatters: "Moves beyond line-based diffs by understanding code structure — surfacing what actually changed semantically rather than which lines were touched, dramatically reducing review cognitive load."
+summary: "A visual analysis of AI coding tools and intelligent-development ecosystems, with interactive sections for spectrum, architecture, scaling, and lifecycle."
+whyItMatters: "Presents research and comparative analysis of intelligent development tools as an interactive, art-directed information experience."
+liveUrl: "https://codecompare-cli-nightui.vercel.app/"
 tags:
-  - "CLI"
-  - "Code Analysis"
-  - "Diff"
+  - "Analytics"
+  - "AI Tools"
+  - "Developer Ecosystem"
+  - "Interactive Report"
   - "TypeScript"
-  - "Developer Tools"
 artifacts:
-  - label: "README"
-    type: "readme"
-    visibility: "pending"
-  - label: "Demo"
+  - label: "Showcase"
     type: "demo"
+    url: "https://codecompare-cli-nightui.vercel.app/"
+    visibility: "public"
+  - label: "Source"
+    type: "source"
     visibility: "pending"
 related:
   - "project-tool-browser-editor"
   - "devprofile-terminal"
 ---
 
-CodeCompare CLI (Night Forest) is a terminal-native diff tool that renders semantic-aware code comparisons with a precision-tuned dark theme — providing symbol-level change summaries, renamed function detection, and inline reviewer annotations directly in the terminal.
+CodeCompare CLI / Night Forest Analytics presents a structured interactive analysis of modern AI coding tools and development environments.
 
 ### Core Capabilities
 
-- **Semantic Diff Engine:** Diffs parsed at the AST level rather than text lines — correctly identifying renamed functions, moved blocks, and refactored signatures as intentional moves rather than deletions.
-- **Night Forest Theme:** A purpose-built terminal color scheme with calibrated contrast for extended code review sessions, reducing eye fatigue on long diff sets.
-- **Inline Annotations:** Attach reviewer notes directly to diff hunks without leaving the terminal, exported as a structured JSON annotation set for integration with review workflows.
+- **Ecosystem Spectrum:** Interactive comparative mapping evaluating AI development tools across autonomy, capability, and developer ergonomics.
+- **Architectural Breakdowns:** Deep-dive architectural schematics dissecting context pipelines, agent loops, and execution sandboxes.
+- **Art-Directed Experience:** Night Forest visual styling tuned for high-density information absorption.

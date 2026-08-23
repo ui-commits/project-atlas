@@ -3,23 +3,25 @@ title: "Rosetta UI Kit"
 registryId: "PRJ-005"
 category: "ui-systems"
 status: "live"
-availability: "pending"
+availability: "public"
 featured: false
 year: 2026
-summary: "A multilingual-aware design system providing adaptive component tokens and layout primitives tuned for internationalized interfaces and bidirectional text flows."
-whyItMatters: "Bridges the gap between monolingual design systems and production-grade i18n surfaces, enforcing layout correctness for RTL/LTR mixed content without developer-side hacks."
+summary: "A light, component-focused CI/icon system with CSS-driven inactive, active, success, and failure states."
+whyItMatters: "Provides a clean, unmistakable visual grammar for developer workflows, continuous integration status, and system health."
+liveUrl: "https://rosetta-ui-kit.vercel.app/"
 tags:
   - "Design System"
-  - "i18n"
-  - "TypeScript"
-  - "Accessibility"
-  - "Tokens"
+  - "CI / CD"
+  - "Icon System"
+  - "CSS States"
+  - "Components"
 artifacts:
-  - label: "README"
-    type: "readme"
-    visibility: "pending"
-  - label: "Architecture"
-    type: "architecture"
+  - label: "Showcase"
+    type: "demo"
+    url: "https://rosetta-ui-kit.vercel.app/"
+    visibility: "public"
+  - label: "Source"
+    type: "source"
     visibility: "pending"
 related:
   - "neo-ui-kit"
@@ -27,10 +29,10 @@ related:
   - "pnw-aicg-ui-kit"
 ---
 
-Rosetta UI Kit is a design system built for the full complexity of internationalized product surfaces — handling bidirectional text, locale-aware spacing scales, and adaptive typographic tokens across varied script families.
+Rosetta UI Kit is a light, component-focused CI/icon system engineered with CSS-driven state transitions for developer tools and operational interfaces.
 
 ### Core Capabilities
 
-- **Bidirectional Layout Engine:** Component primitives that automatically mirror padding, iconography placement, and flex direction for RTL/LTR context switches.
-- **Locale-Aware Tokens:** Typographic scale and density tokens that adapt to script family (Latin, Arabic, CJK) without custom overrides per locale.
-- **Accessible by Default:** WCAG-compliant contrast ratios maintained across all theme variants and locale configurations.
+- **State-Driven Iconography:** Declarative CSS-driven indicators for active, idle, running, success, and failure workflows.
+- **Developer Workflow Components:** Purpose-built UI components for commit logs, build pipelines, and artifact inspectors.
+- **Theme Adaptability:** Lightweight token architecture designed to drop into existing web apps with zero runtime overhead.
