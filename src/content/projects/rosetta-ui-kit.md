@@ -28,6 +28,11 @@ related:
   - "neo-ui-kit"
   - "oswego-park-ui-kit"
   - "pnw-aicg-ui-kit"
+thumbnail:
+  src: "/images/projects/rosetta-ui-kit.webp"
+  alt: "Screenshot of Rosetta UI Kit"
+  width: 1600
+  height: 1000
 ---
 
 Rosetta UI Kit is a light, component-focused CI/icon system engineered with CSS-driven state transitions for developer tools and operational interfaces.

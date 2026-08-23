@@ -25,6 +25,11 @@ artifacts:
     visibility: "pending"
 related:
   - "devprofile-terminal"
+thumbnail:
+  src: "/images/projects/voluble-babka.webp"
+  alt: "Screenshot of Voluble Babka"
+  width: 1600
+  height: 1000
 ---
 
 Voluble Babka is a companion personal profile and context site providing narrative engineering background, architectural philosophy, and cross-project context.

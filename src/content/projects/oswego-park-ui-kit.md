@@ -28,6 +28,11 @@ related:
   - "neo-ui-kit"
   - "pnw-theme-ui-kit"
   - "rosetta-ui-kit"
+thumbnail:
+  src: "/images/projects/oswego-park-ui-kit.webp"
+  alt: "Screenshot of Oswego Park UI Kit"
+  width: 1600
+  height: 1000
 ---
 
 Oswego Park is a forest-intelligence design system engineered for high-density information displays and low-light operational environments.

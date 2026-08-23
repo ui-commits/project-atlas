@@ -30,6 +30,11 @@ related:
   - "meridian-agent-studio-os"
   - "agentos"
   - "xxrun"
+thumbnail:
+  src: "/images/projects/detrun.webp"
+  alt: "Screenshot of DetRun"
+  width: 1600
+  height: 1000
 ---
 
 DetRun is a deterministic workflow orchestration engine built around DAG visualization, time-travel execution stepping, and circular-buffer telemetry metrics.

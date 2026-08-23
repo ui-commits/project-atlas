@@ -30,6 +30,11 @@ related:
   - "meridian-agent-studio-os"
   - "detrun"
   - "xx-ledger-orchestrator"
+thumbnail:
+  src: "/images/projects/agentos.webp"
+  alt: "Screenshot of AgentOS / Agent Studio OS"
+  width: 1600
+  height: 1000
 ---
 
 AgentOS is a visual node-based studio for creating, orchestrating, and monitoring autonomous AI agents with real-time execution streaming.

@@ -29,6 +29,11 @@ artifacts:
 related:
   - "chromatic-topology"
   - "stateman"
+thumbnail:
+  src: "/images/projects/runtimedistr.webp"
+  alt: "Screenshot of RUNTIMEDISTR / Hermes C2"
+  width: 1600
+  height: 1000
 ---
 
 RUNTIMEDISTR (Hermes C2) explores hierarchical infrastructure ontologies through synchronized projections across geographic, topology, hardware, ontology, and knowledge-space dimensions.

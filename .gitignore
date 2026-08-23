@@ -19,3 +19,4 @@ node_modules/
 Thumbs.db
 
 .vercel
+public/images/projects/capture-report.json

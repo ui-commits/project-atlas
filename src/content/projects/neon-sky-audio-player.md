@@ -27,6 +27,11 @@ artifacts:
 related:
   - "xxrun"
   - "chromatic-topology"
+thumbnail:
+  src: "/images/projects/neon-sky-audio-player.webp"
+  alt: "Screenshot of Neon Sky Audio Player"
+  width: 1600
+  height: 1000
 ---
 
 Neon Sky Audio Player is a rich audiovisual interface engineered around real-time Web Audio API signal processing, frequency visualization, and boot-sequence interaction design.

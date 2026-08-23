@@ -30,6 +30,11 @@ related:
   - "xstatepro"
   - "xx-ledger-orchestrator"
   - "detrun"
+thumbnail:
+  src: "/images/projects/xxrun.webp"
+  alt: "Screenshot of Xxrun"
+  width: 1600
+  height: 1000
 ---
 
 Xxrun is an event-driven multi-node telemetry kernel combining deterministic state transition graphs with an indexable event ledger and continuous time scrubbing.

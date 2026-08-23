@@ -27,6 +27,11 @@ artifacts:
 related:
   - "codecompare-cli-night-forest"
   - "devprofile-terminal"
+thumbnail:
+  src: "/images/projects/project-tool-browser-editor.webp"
+  alt: "Screenshot of Project Tool / Browser Code Editor"
+  width: 1600
+  height: 1000
 ---
 
 Project Tool / Browser Code Editor delivers a full-featured coding sandbox running entirely within client-side browser runtime.

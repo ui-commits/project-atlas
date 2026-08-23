@@ -28,6 +28,11 @@ artifacts:
 related:
   - "runtimedistr"
   - "stateman"
+thumbnail:
+  src: "/images/projects/chromatic-topology.webp"
+  alt: "Screenshot of Chromatic Topology UI"
+  width: 1600
+  height: 1000
 ---
 
 Chromatic Topology UI renders a deterministic eight-role distributed runtime topology. It visualizes runtime orchestration, state propagation, and fault recovery along a five-stage command authorization boundary.

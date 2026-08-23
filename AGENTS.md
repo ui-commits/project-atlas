@@ -19,6 +19,7 @@ npm run dev
 npm run check
 npm run build
 npm run preview
+npm run capture:thumbnails
 ```
 
 Run `npm run check` and `npm run build` for every code or content change. Use `npm run preview` for visual changes or route/content changes that need production-build confirmation.
@@ -60,6 +61,9 @@ Project records live in `src/content/projects/*.md`. The filename is the public 
 ## Media rules
 
 - Prefer local, committed thumbnails with explicit `width` and `height`.
+- Run `npm run capture:thumbnails` to create standard 1600 × 1000 WebP images for live records. Pass `-- --slug <slug> --force` to refresh one record, or `-- --force` to refresh all records.
+- Review every automated capture before committing it; browser automation can capture cookie banners, loading states, authentication walls, or sensitive content.
+- Keep the generated `capture-report.json` only when it is useful as an audited record; otherwise do not commit it.
 - The current remote screenshot integration is fallback-only and may fail or be rate-limited.
 - Preserve the `RegistryPlate` fallback when changing card or dossier media rendering.
 - Do not add unlicensed images or expose private screenshots/URLs.

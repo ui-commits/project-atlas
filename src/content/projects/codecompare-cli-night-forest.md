@@ -27,6 +27,11 @@ artifacts:
 related:
   - "project-tool-browser-editor"
   - "devprofile-terminal"
+thumbnail:
+  src: "/images/projects/codecompare-cli-night-forest.webp"
+  alt: "Screenshot of CodeCompare CLI / Night Forest Analytics"
+  width: 1600
+  height: 1000
 ---
 
 CodeCompare CLI / Night Forest Analytics presents a structured interactive analysis of modern AI coding tools and development environments.

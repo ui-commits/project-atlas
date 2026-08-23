@@ -30,6 +30,11 @@ related:
   - "xxrun"
   - "stateman-heartbeat-monitor"
   - "detrun"
+thumbnail:
+  src: "/images/projects/xstatepro.webp"
+  alt: "Screenshot of Xstatepro"
+  width: 1600
+  height: 1000
 ---
 
 Xstatepro translates complex XState v5 statecharts into an intuitive subway-line transit diagram, letting users traverse branches, fork states, and view runtime telemetry along each transit route.

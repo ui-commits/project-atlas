@@ -30,6 +30,11 @@ related:
   - "agentos"
   - "detrun"
   - "xstatepro"
+thumbnail:
+  src: "/images/projects/meridian-agent-studio-os.webp"
+  alt: "Screenshot of Meridian / Agent Studio OS"
+  width: 1600
+  height: 1000
 ---
 
 Meridian / Agent Studio OS is a visual environment for designing and running multi-agent systems — providing a drag-and-wire canvas that renders agent graphs, message flows, and execution traces in a unified operational surface.

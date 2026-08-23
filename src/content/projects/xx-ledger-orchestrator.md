@@ -30,6 +30,11 @@ related:
   - "xxrun"
   - "agentos"
   - "detrun"
+thumbnail:
+  src: "/images/projects/xx-ledger-orchestrator.webp"
+  alt: "Screenshot of XX Ledger Orchestrator"
+  width: 1600
+  height: 1000
 ---
 
 XX Ledger Orchestrator provides a state-machine-driven simulation environment for multi-actor workflows, pairing actor lifecycle management with an immutable telemetry ledger.

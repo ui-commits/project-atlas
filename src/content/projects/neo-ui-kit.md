@@ -28,6 +28,11 @@ related:
   - "oswego-park-ui-kit"
   - "pnw-theme-ui-kit"
   - "rosetta-ui-kit"
+thumbnail:
+  src: "/images/projects/neo-ui-kit.webp"
+  alt: "Screenshot of Neo UI Kit"
+  width: 1600
+  height: 1000
 ---
 
 Neo UI Kit is a high-contrast, accessibility-engineered design system designed specifically for mission-critical agentic telemetry, live execution streams, and LLM operations interfaces.

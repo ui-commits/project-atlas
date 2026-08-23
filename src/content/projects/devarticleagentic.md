@@ -29,6 +29,11 @@ artifacts:
 related:
   - "meridian-agent-studio-os"
   - "agentos"
+thumbnail:
+  src: "/images/projects/devarticleagentic.webp"
+  alt: "Screenshot of devArticleAgentic"
+  width: 1600
+  height: 1000
 ---
 
 devArticleAgentic is an agentic content synthesis and article generation platform built around structured LLM routing, recursive outline drafting, and verifiable source citations.

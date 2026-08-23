@@ -30,6 +30,11 @@ related:
   - "runtimedistr"
   - "xstatepro"
   - "detrun"
+thumbnail:
+  src: "/images/projects/stateman-heartbeat-monitor.webp"
+  alt: "Screenshot of StateMan / Heartbeat Monitor"
+  width: 1600
+  height: 1000
 ---
 
 StateMan / Heartbeat Monitor combines a deterministic state machine registry with a live telemetry surface — surfacing latency, packet loss, and state transition histories across distributed nodes.

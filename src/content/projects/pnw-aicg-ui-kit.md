@@ -28,6 +28,11 @@ related:
   - "rosetta-ui-kit"
   - "neo-ui-kit"
   - "oswego-park-ui-kit"
+thumbnail:
+  src: "/images/projects/pnw-aicg-ui-kit.webp"
+  alt: "Screenshot of PNW / AICG UI Kit"
+  width: 1600
+  height: 1000
 ---
 
 The AICG / PNW UI Kit is a professional design system engineered for orchestrated workflows, intelligent infrastructure, and forward-deployed agentic systems.

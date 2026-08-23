@@ -27,6 +27,11 @@ artifacts:
 related:
   - "voluble-babka"
   - "project-tool-browser-editor"
+thumbnail:
+  src: "/images/projects/devprofile-terminal.webp"
+  alt: "Screenshot of DevProfile Terminal"
+  width: 1600
+  height: 1000
 ---
 
 DevProfile Terminal provides a companion personal-context interface utilizing a virtual in-browser filesystem and command prompt to explore background, tooling, and projects.
