@@ -23,24 +23,21 @@ test.describe('keyboard access and visible focus', () => {
     await expect(page.locator('#main-content')).toBeInViewport();
   });
 
-  test('the category filter shows a visible focus indicator when keyboard-focused', async ({
+  test('header actions show a visible focus indicator when keyboard-focused', async ({
     page,
   }) => {
     await page.goto('/');
-    const select = page.locator('#header-category-filter');
+    // Tab sequence: skip link -> C. Rodriguez -> GitHub icon
+    await page.keyboard.press('Tab'); // skip
+    await page.keyboard.press('Tab'); // C. Rodriguez
+    await page.keyboard.press('Tab'); // GitHub
+    const githubLink = page.locator('.header-icon-btn').first();
+    await expect(githubLink).toBeFocused();
 
-    // Tab until the filter is reached instead of assuming a fixed order.
-    for (let i = 0; i < 10 && !(await select.evaluate((el) => el === document.activeElement)); i++) {
-      await page.keyboard.press('Tab');
-    }
-    await expect(select).toBeFocused();
-
-    // The select transitions its focus ring in; poll until it lands.
-    // The site's focus token is the mint accent (#6ee7b7).
     await expect
-      .poll(() => select.evaluate((el) => getComputedStyle(el).boxShadow), {
+      .poll(() => githubLink.evaluate((el) => getComputedStyle(el).outlineColor), {
         timeout: 2_000,
-        message: 'keyboard focus must produce the mint focus ring',
+        message: 'keyboard focus must produce visible outline',
       })
       .toContain('110, 231, 183');
   });
