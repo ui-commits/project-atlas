@@ -1,0 +1,143 @@
+---
+/**
+ * DynamicBackground — Ambient particulate canvas effect.
+ * Renders glowing amethyst sleet / celestial precipitation particles
+ * harmonized with the Twilight Amethyst palette (#FFD0EC, #81689D, #474F7A).
+ * Ultra-performant 60fps canvas loop with reduced motion support.
+ */
+---
+
+<canvas id="ambient-canvas" class="ambient-canvas" aria-hidden="true"></canvas>
+
+<script>
+  function initAmbientCanvas() {
+    const canvas = document.getElementById('ambient-canvas') as HTMLCanvasElement | null;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+    let animationFrameId: number;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Palette particle colors
+    const colors = [
+      'rgba(255, 208, 236, ', // Rose gold
+      'rgba(129, 104, 157, ', // Amethyst
+      'rgba(198, 181, 219, ', // Soft lilac
+      'rgba(110, 231, 183, ', // Mint spark
+    ];
+
+    interface Particle {
+      x: number;
+      y: number;
+      length: number;
+      thickness: number;
+      speedY: number;
+      speedX: number;
+      opacity: number;
+      colorBase: string;
+      glow: boolean;
+    }
+
+    const particleCount = Math.min(Math.floor(width / 14), 110);
+    const particles: Particle[] = [];
+
+    for (let i = 0; i < particleCount; i++) {
+      const colorIndex = Math.floor(Math.random() * colors.length);
+      const isMint = colorIndex === 3;
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        length: Math.random() * 8 + 4,
+        thickness: Math.random() * 1.5 + 0.8,
+        speedY: Math.random() * 1.6 + 0.9,
+        speedX: (Math.random() - 0.2) * 0.4,
+        opacity: Math.random() * 0.45 + 0.2,
+        colorBase: colors[colorIndex] || 'rgba(255, 208, 236, ',
+        glow: isMint || Math.random() > 0.7,
+      });
+    }
+
+    function onResize() {
+      if (!canvas || !ctx) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', onResize, { passive: true });
+
+    function render() {
+      if (!ctx || !canvas) return;
+      ctx.clearRect(0, 0, width, height);
+
+      // Render drifting crystalline sleet streaks
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i]!;
+
+        ctx.beginPath();
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x + p.speedX * p.length, p.y + p.length);
+
+        ctx.strokeStyle = `${p.colorBase}${p.opacity})`;
+        ctx.lineWidth = p.thickness;
+        ctx.lineCap = 'round';
+
+        if (p.glow) {
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = `${p.colorBase}0.8)`;
+        } else {
+          ctx.shadowBlur = 0;
+        }
+
+        ctx.stroke();
+
+        if (!prefersReducedMotion) {
+          p.y += p.speedY;
+          p.x += p.speedX;
+
+          // Wrap around edges
+          if (p.y > height + 20) {
+            p.y = -20;
+            p.x = Math.random() * width;
+          }
+          if (p.x > width + 20) p.x = -20;
+          if (p.x < -20) p.x = width + 20;
+        }
+      }
+
+      ctx.shadowBlur = 0;
+      animationFrameId = requestAnimationFrame(render);
+    }
+
+    render();
+
+    // Cleanup on view transition navigations
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        cancelAnimationFrame(animationFrameId);
+        window.removeEventListener('resize', onResize);
+      },
+      { once: true }
+    );
+  }
+
+  initAmbientCanvas();
+  document.addEventListener('astro:page-load', initAmbientCanvas);
+</script>
+
+<style>
+  .ambient-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+  }
+</style>

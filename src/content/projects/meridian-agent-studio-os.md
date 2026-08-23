@@ -8,7 +8,7 @@ featured: true
 year: 2026
 summary: "A visual AI-agent studio combining a workflow canvas, orchestration engine, policy governance, LLM routing, and real-time monitoring."
 whyItMatters: "Removes the friction of building complex agent topologies with a structured visual workspace mapping directly to runtime behavior."
-liveUrl: "https://meridian-dyg119ptw-crodacroda.vercel.app"
+liveUrl: "https://meridian-nine-zeta.vercel.app/"
 githubUrl: "https://github.com/ui-commits/meridian"
 tags:
   - "Agents"

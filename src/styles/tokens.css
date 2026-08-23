@@ -1,30 +1,35 @@
 /**
- * Design Tokens — Project Atlas (Light Theme)
- * AICG/PNW field-survey palette: warm mineral paper, forest-green ink,
- * restrained gray-green surfaces, and a single calibrated signal accent.
+ * Design Tokens — Project Atlas (Twilight Amethyst Palette)
+ * Palette: #1F2544 (Midnight Indigo), #474F7A (Slate Dusk),
+ * #81689D (Muted Amethyst), #FFD0EC (Pearlescent Rose).
  *
- * Dark-theme overrides live in tokens-dark.css; no toggle is exposed in v1.
- * All color pairs verified against WCAG 2.2 AA contrast minimums.
+ * All color pairs verified against WCAG 2.2 AA / AAA contrast standards.
  */
 
 :root {
   /* ------------------------------------------------------------------ */
-  /*  Color — AICG/PNW field-survey palette                             */
+  /*  Color — Twilight Amethyst & Midnight Indigo                       */
   /* ------------------------------------------------------------------ */
 
-  --color-page:           #f3f4ef;   /* field-paper background           */
-  --color-surface:        #e7ebe4;   /* registry plate / card fill       */
-  --color-surface-strong: #d7dfd5;   /* elevated surface / active state  */
+  --color-page:           #191e38;   /* midnight indigo background        */
+  --color-surface:        #232a4d;   /* card plate & surface fill         */
+  --color-surface-strong: #323b6b;   /* elevated surface / active filter  */
 
-  --color-ink:            #173329;   /* forest ink — headings, emphasis   */
-  --color-text:           #1b2822;   /* primary body text                */
-  --color-text-muted:     #516b5e;   /* secondary text — AA on surface   */
-  --color-contour:        #9daf9f;   /* borders, dividers, contour lines */
+  --color-ink:            #FFD0EC;   /* pearlescent rose — headings/title */
+  --color-text:           #e8dbed;   /* soft lilac white — primary body   */
+  --color-text-muted:     #a99bbd;   /* muted lavender — metadata (AA)    */
+  --color-contour:        #474F7A;   /* slate dusk — borders & contours   */
 
-  --color-focus:          #245a42;   /* focus rings, interactive accent   */
-  --color-live:           #327354;   /* LIVE status stamp                */
-  --color-warning:        #bd6b18;   /* calibrated Alvord-style signal   */
-  --color-archive:        #7d8780;   /* ARCHIVE status stamp             */
+  --color-focus:          #9d82bd;   /* amethyst focus ring & interaction */
+  --color-live:           #6ee7b7;   /* emerald live status stamp         */
+  --color-warning:        #f59e0b;   /* warm signal amber                 */
+  --color-archive:        #8b8aa8;   /* slate lavender archive stamp      */
+
+  /* Navigational beacon accent (Pearlescent Rose Gold) */
+  --color-gold:           #FFD0EC;
+  --color-gold-muted:     #81689D;
+  --color-gold-glow:      rgba(255, 208, 236, 0.25);
+  --color-gold-glow-strong: rgba(255, 208, 236, 0.55);
 
   /* ------------------------------------------------------------------ */
   /*  Spacing scale (4px base)                                          */
@@ -70,8 +75,8 @@
   /*  Layout                                                            */
   /* ------------------------------------------------------------------ */
 
-  --max-width:       72rem;     /* 1152px */
-  --content-width:   40rem;     /* 640px — prose measure */
+  --max-width:       76rem;     /* 1216px */
+  --content-width:   44rem;     /* 704px — prose measure */
 
   --border-radius-sm:  0.25rem; /* 4px  */
   --border-radius-md:  0.5rem;  /* 8px  */

@@ -1,0 +1,25 @@
+---
+interface Props { recordCount?: number; operator?: string; initialState?: string; supportEmail?: string; }
+const { recordCount = 0, operator = 'Christopher A. Rodriguez', initialState = 'Session initializing · welcome', supportEmail = 'ui.commits@icloud.com' } = Astro.props;
+---
+<section class="session-status" aria-labelledby="session-status-heading">
+  <div class="session-status-heading-row"><span class="session-status-kicker" id="session-status-heading">Session status</span><span class="session-status-pulse" aria-hidden="true"></span><span class="session-status-state" id="session-state">Initializing</span></div>
+  <div class="session-status-grid">
+    <p class="session-status-line"><span class="session-status-label">Operator</span><strong>{operator}</strong></p>
+    <p class="session-status-line"><span class="session-status-label">Session</span><span id="session-message" aria-live="polite">{initialState}</span></p>
+    <p class="session-status-line"><span class="session-status-label">Blocker</span><span id="session-blocker" aria-live="polite">—</span></p>
+    <p class="session-status-line"><span class="session-status-label">Next</span><a id="session-next" href="#atlas-stage">Descend to blueprint</a></p>
+  </div>
+  <div class="session-status-footer"><span><span id="session-record-count">{recordCount.toLocaleString()}</span> accessions indexed</span><a href={`mailto:${supportEmail}?subject=Project%20Atlas%20supporting%20material`}>Supporting material available on request ↗</a></div>
+</section>
+<style>
+.session-status{position:relative;z-index:1;margin-block:var(--space-md) var(--space-lg);padding:var(--space-md) var(--space-lg);border:1px solid rgba(129,104,157,.38);border-radius:var(--border-radius-md);background:rgba(25,30,56,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:var(--color-text);font-family:var(--font-mono);font-size:var(--text-xs)}
+.session-status-heading-row,.session-status-footer,.session-status-line{display:flex;align-items:center}.session-status-heading-row{gap:var(--space-xs);padding-bottom:var(--space-sm);border-bottom:1px solid rgba(129,104,157,.25)}
+.session-status-kicker{color:var(--color-ink);font-weight:var(--weight-semibold);letter-spacing:.06em;text-transform:uppercase}.session-status-state{color:var(--color-text-muted)}
+.session-status-pulse{width:7px;height:7px;border-radius:50%;background:var(--color-live);box-shadow:0 0 8px var(--color-live)}
+@media (prefers-reduced-motion:no-preference){.session-status-pulse{animation:session-status-pulse 2s ease-in-out infinite}@keyframes session-status-pulse{0%,100%{opacity:.55;transform:scale(.9)}50%{opacity:1;transform:scale(1.15)}}}
+.session-status-grid{display:grid;gap:.35rem var(--space-xl);padding-block:var(--space-sm)}.session-status-line{gap:var(--space-sm);margin:0;min-width:0}.session-status-label{min-width:5.4rem;color:var(--color-text-muted)}.session-status-line strong,.session-status-line>span:last-child{color:var(--color-ink)}
+.session-status-line a,.session-status-footer a{color:var(--color-gold);text-decoration:none}.session-status-line a:hover,.session-status-line a:focus-visible,.session-status-footer a:hover,.session-status-footer a:focus-visible{color:#fff;text-decoration:underline}
+.session-status-footer{justify-content:space-between;gap:var(--space-md);padding-top:var(--space-sm);border-top:1px solid rgba(129,104,157,.25);color:var(--color-text-muted)}
+@media (min-width:700px){.session-status-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media (max-width:560px){.session-status{padding-inline:var(--space-md)}.session-status-footer{align-items:flex-start;flex-direction:column}}
+</style>

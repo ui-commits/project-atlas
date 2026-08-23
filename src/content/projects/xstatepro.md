@@ -4,7 +4,7 @@ registryId: "PRJ-011"
 category: "agents-automation"
 status: "live"
 availability: "public"
-featured: false
+featured: true
 year: 2026
 summary: "An XState v5-powered runtime explorer using a subway-style transit map, branch/fork interactions, telemetry, adaptive routing, and Gruvbox themes."
 whyItMatters: "An unusually playful and tactile way to make formal state-machine navigation and runtime state graphs tangible and engaging."
