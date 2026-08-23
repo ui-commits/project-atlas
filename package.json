@@ -10,6 +10,7 @@
     "check": "astro check",
     "check:links": "node scripts/link-check.mjs",
     "check:stale": "node scripts/stale-report.mjs",
+    "test:e2e": "playwright test",
     "capture:thumbnails": "node scripts/capture-thumbnails.mjs",
     "astro": "astro"
   },
@@ -21,6 +22,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.0",
+    "@playwright/test": "^1.62.1",
     "playwright": "^1.62.1",
     "typescript": "^5.7.0"
   }

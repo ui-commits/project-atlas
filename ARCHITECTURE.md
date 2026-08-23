@@ -155,7 +155,7 @@ The site uses global CSS tokens plus component-scoped styles. There is no Tailwi
 git push / pull request
         |
         v
-GitHub Actions: npm ci -> npm run check -> npm run build -> link validation
+GitHub Actions: npm ci -> npm run check -> npm run build -> link validation -> Playwright e2e
         |
         v
 Vercel: install -> npm run build -> serve dist/
@@ -212,5 +212,5 @@ These are intentional next steps, not hidden requirements of the current codebas
 
 - Commit local thumbnails for all records and remove Microlink from the critical visual path.
 - Add collection-level validation for unique accession IDs and valid related-slug references.
-- Add browser tests for filtering, modal focus handling, dossier navigation, and responsive layouts.
+- Extend Playwright coverage to modal focus handling (baseline covers filtering, dossier navigation, keyboard focus, and dual viewports).
 - Enable and review production availability/performance monitoring.

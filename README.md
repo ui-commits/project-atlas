@@ -38,9 +38,12 @@ npm run check
 npm run build
 npm run preview
 npm run check:links
+npm run test:e2e
 ```
 
 `npm run check` runs Astro and TypeScript diagnostics. `npm run build` validates the content collection and creates the deployable static site in `dist/`. Use `npm run preview` to inspect that production build locally. `npm run check:links` validates internal routes in `dist/` and external URLs; it retries transient failures and only fails on confirmed broken links.
+
+The Playwright suite (`tests/`) runs against the production build via `astro preview`, so build first. Browser binaries install once with `npx playwright install chromium`.
 
 ## Project structure
 
@@ -158,7 +161,7 @@ The shared header is present on every route. On the home page it filters cards i
 5. Open the built site with `npm run preview` for visual review.
 6. Open a pull request using the repository template.
 
-GitHub Actions repeats the install, type check, and static build on pull requests and pushes to `main`. It uploads `dist/` as a short-lived artifact.
+GitHub Actions runs three gates on pull requests and pushes to `main`: type-check plus build, link validation against the built site, and the Playwright regression suite on desktop and mobile viewports. The build is uploaded as a short-lived artifact and reused by both validation jobs.
 
 ## Deployment
 
