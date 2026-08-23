@@ -38,7 +38,7 @@ Vercel static hosting
 | Field validation and allowed values | `src/schemas/project.ts` | Zod validates every individual record at build time. |
 | Collection loading | `src/content.config.ts` | Glob loader reads the project Markdown directory. |
 | Display labels and plate algorithm | `src/lib/registry.ts` | Categories/statuses display through shared mappings. |
-| Shared shell and browser controllers | `src/layouts/BaseLayout.astro` | Header filter, preview modal, and view-transition lifecycle. |
+| Shared shell and browser controllers | `src/layouts/BaseLayout.astro` | Preview modal and view-transition lifecycle. |
 | Rendering | `src/pages/*.astro`, `src/components/*.astro` | Pages compose validated collection entries. |
 | Visual system | `src/styles/` and component-scoped styles | CSS custom properties are the design API. |
 | Deployment | `astro.config.ts`, Vercel project settings | No server adapter or environment variables are required today. |
@@ -88,11 +88,10 @@ All routes are generated at build time because `astro.config.ts` specifies `outp
 - Document metadata and title.
 - The Astro `ClientRouter` used for view transitions.
 - Skip navigation and persistent header.
-- Category selection and URL synchronization.
 - The global preview modal controller.
 - The decorative canvas background.
 
-Pages should use `BaseLayout` unless there is a compelling reason to create another layout. The header filter expects a `#project-grid` on the home page; it safely does nothing on pages without one.
+Pages should use `BaseLayout` unless there is a compelling reason to create another layout.
 
 ### Components
 
@@ -103,8 +102,7 @@ Pages should use `BaseLayout` unless there is a compelling reason to create anot
 | `StatusStamp` | Consistent status indicator. |
 | `ArtifactLink` | Artifact visibility and optional external URL presentation. |
 | `PreviewModal` | Global sandboxed iframe overlay for live project previews. |
-| `SessionStatus` | Home-page status panel synchronized with filtering. |
-| `DynamicBackground` | Decorative canvas particle effect, respecting reduced motion. |
+| `DynamicBackground` | Decorative ember-field canvas, respecting reduced motion. |
 
 ### Visual fallback chain
 
@@ -120,11 +118,9 @@ This is a progressive enhancement chain. Do not make the fallback inaccessible b
 
 The application uses inline TypeScript-capable browser scripts, not a client framework.
 
-### Category filtering
+### Home-page counts
 
-The header selection reads `?category=` on page load. On `/`, it sets the `hidden` property of cards based on their `data-category`; it also updates the browser URL without a full navigation. On non-home routes, changing the selection navigates to the filtered home page.
-
-The home page maintains the visible-record count and session-status text after filtering. It listens to `astro:page-load` because the Astro client router reuses the document across transitions.
+The home page maintains the visible-record count. It listens to `astro:page-load` because the Astro client router reuses the document across transitions. Category filtering was removed — the previous `?category=` header selection and `SessionStatus` panel no longer exist.
 
 ### Preview modal
 
@@ -206,11 +202,23 @@ Avoid this for published pages. Rename the Markdown file only after planning red
 
 Prefer progressive enhancement. Ensure the static page remains understandable without JavaScript, bind behavior safely across `astro:page-load`, protect focus behavior, and test with keyboard plus reduced motion.
 
+## Next steps — Phase 6 (Unfinished)
+
+Phases 1–5, local thumbnails, CI/link validation, staleness reporting, and the modal focus patch are complete. The remaining stabilization work is **Phase 6 — operational visibility**:
+
+- Enable Vercel Analytics and Speed Insights (if the account/plan permits)
+- Set baseline Core Web Vitals and page-weight targets
+- Configure uptime monitoring for `https://project-atlas.vercel.app`
+- Optionally monitor catalog live URLs, grouped to avoid alert noise
+- Add a lightweight monthly review of failed links, visitor errors, and performance deltas
+- Document who receives alerts and what to do
+
+No further code changes are required to ship the current site; Phase 6 can be resumed independently.
+
 ## Known hardening opportunities
 
 These are intentional next steps, not hidden requirements of the current codebase:
 
 - Commit local thumbnails for all records and remove Microlink from the critical visual path.
 - Add collection-level validation for unique accession IDs and valid related-slug references.
-- Extend Playwright coverage to modal focus handling (baseline covers filtering, dossier navigation, keyboard focus, and dual viewports).
-- Enable and review production availability/performance monitoring.
+- Extend Playwright coverage if new interactions are added (baseline now covers dossier navigation, keyboard focus, and dual viewports; filtering was removed).

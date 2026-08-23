@@ -8,12 +8,12 @@ The site is built with Astro, TypeScript, Zod-validated Markdown content, and pl
 
 ## What it provides
 
-- A filterable registry of project cards, ordered by immutable accession ID.
+- A registry of project cards, ordered by immutable accession ID.
 - A static dossier page for every project record.
 - Typed Markdown content with controlled vocabularies for categories, statuses, availability, and artifacts.
 - Live-project actions, source links, artifact links, and a sandboxed iframe preview when embedding is allowed by the target site.
 - A resilient visual hierarchy: local thumbnails take priority, remote Microlink screenshots are a fallback, and procedural SVG registry plates render when no image is available.
-- Persistent header navigation, URL-backed category filtering, view transitions, skip navigation, visible focus states, reduced-motion support, and responsive layouts.
+- Persistent header navigation, view transitions, skip navigation, visible focus states, reduced-motion support, and responsive layouts.
 
 ## Quick start
 
@@ -145,12 +145,11 @@ The script writes `public/images/projects/capture-report.json` and exits non-zer
 
 | Route | Purpose |
 | --- | --- |
-| `/` | All accessions, category filter, session status, and card grid |
-| `/?category=<category>` | Home page with a category filter applied |
+| `/` | All accessions and card grid |
 | `/projects/[slug]` | Static project dossier generated from a Markdown record |
 | `/archive` | Records whose status is `archive` or `local` |
 
-The shared header is present on every route. On the home page it filters cards in place and updates the URL. On other routes it navigates to the filtered home page. The interactive preview is best effort: some third-party sites prevent iframe embedding, so the primary “Open Live Project” link must remain available.
+The shared header is present on every route. The interactive preview is best effort: some third-party sites prevent iframe embedding, so the primary “Open Live Project” link must remain available.
 
 ## Development workflow
 
@@ -185,6 +184,19 @@ Records carry `lastVerified` (the date a human last confirmed the record's links
 - A scheduled **Maintenance** workflow (`.github/workflows/maintenance.yml`) runs at 09:00 UTC on the first of each month, and can be triggered manually from the Actions tab. It reruns the type check and build, validates links, and posts a staleness report to the run summary. Stale records appear as warnings; they never turn maintenance red.
 - When a record goes stale: open it, confirm its links and copy still hold, then set `lastVerified` to today. Use the "Project record update" issue template for anything broken.
 - Handling unavailable projects: a dead or retired live site means setting `status: archive` (or `local`) and removing the URL — records are never deleted, and IDs are never reused. Private projects drop their URLs and set `availability: private`. Renaming a published slug changes its public dossier URL; plan a redirect before renaming.
+
+## Next steps — Phase 6 (Unfinished)
+
+Phases 1–5 and the follow-up modal / header fixes are complete. Phase 6 — **operational visibility** — is intentionally deferred and tracked here for the next session:
+
+- [ ] Enable Vercel Analytics and Speed Insights (if the account/plan permits)
+- [ ] Set baseline Core Web Vitals and page-weight targets
+- [ ] Configure uptime monitoring for the primary Atlas URL (`https://project-atlas.vercel.app`)
+- [ ] Optionally monitor the live URLs listed in the catalog, grouped to avoid alert noise
+- [ ] Add a lightweight monthly review of failed links, visitor errors, and performance deltas
+- [ ] Document who receives alerts and what action to take (runbook in `OPERATIONS.md` or `HANDOFF.md`)
+
+Definition of done: broken availability and performance regressions are visible *before* users report them. Nothing in Phases 1–5 depends on this; it can be picked up independently.
 
 ## Documentation
 
