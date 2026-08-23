@@ -92,7 +92,7 @@ artifacts: []
 ---
 ```
 
-Optional fields are `featured`, `liveUrl`, `githubUrl`, `thumbnail`, `related`, and `artifacts`. URLs must be complete, valid URLs. If a source or artifact is private, unavailable, or not yet confirmed, omit its URL rather than adding a guessed or dead link.
+Optional fields are `featured`, `liveUrl`, `githubUrl`, `thumbnail`, `related`, `artifacts`, `reviewCadence` (`monthly` / `quarterly` / `yearly`; defaults to `quarterly`), and `verificationNotes`. URLs must be complete, valid URLs. If a source or artifact is private, unavailable, or not yet confirmed, omit its URL rather than adding a guessed or dead link.
 
 ### Controlled vocabulary
 
@@ -103,6 +103,7 @@ Optional fields are `featured`, `liveUrl`, `githubUrl`, `thumbnail`, `related`, 
 | `category` | `ui-systems`, `runtime-systems`, `agents-automation`, `tools-analysis`, `developer-tools`, `creative-experiments`, `personal-context` |
 | artifact `type` | `readme`, `architecture`, `design-notes`, `technical-article`, `demo`, `source`, `screenshots`, `changelog` |
 | artifact `visibility` | `public`, `private`, `pending` |
+| `reviewCadence` | `monthly`, `quarterly`, `yearly` |
 
 Registry IDs must match `PRJ-001` through `PRJ-999`. Assign the next unused ID and never reuse an ID from an archived record. The schema validates format, but uniqueness across files is a maintainer responsibility until a cross-record validation check is added.
 
@@ -172,6 +173,15 @@ Before releasing:
 5. Record any material deployment detail in `HANDOFF.md` or the pull request.
 
 Do not commit Vercel credentials, bypass tokens, or local `.vercel` state.
+
+## Content maintenance
+
+Records carry `lastVerified` (the date a human last confirmed the record's links and copy) and a `reviewCadence` that sets how long that stamp is trusted — 30/91/365 days for `monthly`/`quarterly`/`yearly`, defaulting to quarterly.
+
+- Run `npm run check:stale` locally to list entries overdue for verification, oldest first.
+- A scheduled **Maintenance** workflow (`.github/workflows/maintenance.yml`) runs at 09:00 UTC on the first of each month, and can be triggered manually from the Actions tab. It reruns the type check and build, validates links, and posts a staleness report to the run summary. Stale records appear as warnings; they never turn maintenance red.
+- When a record goes stale: open it, confirm its links and copy still hold, then set `lastVerified` to today. Use the "Project record update" issue template for anything broken.
+- Handling unavailable projects: a dead or retired live site means setting `status: archive` (or `local`) and removing the URL — records are never deleted, and IDs are never reused. Private projects drop their URLs and set `availability: private`. Renaming a published slug changes its public dossier URL; plan a redirect before renaming.
 
 ## Documentation
 

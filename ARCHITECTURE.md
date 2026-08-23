@@ -163,6 +163,8 @@ Vercel: install -> npm run build -> serve dist/
 
 CI is defined in `.github/workflows/ci.yml`, uses Node 20, and uploads `dist/` for seven days. Vercel uses static output from Astro; no API routes or runtime secrets are part of the architecture.
 
+A monthly **Maintenance** workflow (`.github/workflows/maintenance.yml`, also manually dispatchable) reruns check/build/link validation and generates a staleness report from `lastVerified` and per-record `reviewCadence`. The report is advisory: overdue records warn but do not fail the run.
+
 ### Production access
 
 Vercel deployment protection is an account/project setting outside this repository. The intended production visibility must be explicitly verified after configuration changes. For a public portfolio, test in an unauthenticated browser; a CLI bypass token proves a deployment exists but does not prove ordinary visitors can see it.
@@ -211,5 +213,4 @@ These are intentional next steps, not hidden requirements of the current codebas
 - Commit local thumbnails for all records and remove Microlink from the critical visual path.
 - Add collection-level validation for unique accession IDs and valid related-slug references.
 - Add browser tests for filtering, modal focus handling, dossier navigation, and responsive layouts.
-- Add scheduled content verification using `lastVerified` and an ownership/review policy.
 - Enable and review production availability/performance monitoring.

@@ -64,6 +64,14 @@ export const ARTIFACT_VISIBILITIES = [
 ] as const;
 export type ArtifactVisibility = (typeof ARTIFACT_VISIBILITIES)[number];
 
+/** How often a record is reviewed by a human. Drives staleness reporting. */
+export const REVIEW_CADENCES = [
+  'monthly',
+  'quarterly',
+  'yearly',
+] as const;
+export type ReviewCadence = (typeof REVIEW_CADENCES)[number];
+
 /* ------------------------------------------------------------------ */
 /*  Registry-ID validation                                             */
 /* ------------------------------------------------------------------ */
@@ -86,7 +94,9 @@ export const REGISTRY_ID_PATTERN = /^PRJ-\d{3}$/;
  * Width and height correspond to the source image's intrinsic size.
  */
 export const thumbnailSchema = z.object({
-  src: z.string(),
+  src: z.string().startsWith('/images/projects/', {
+    message: 'thumbnail.src must be a local project image under /images/projects/',
+  }),
   alt: z.string(),
   width: z.number().int().positive(),
   height: z.number().int().positive(),
@@ -120,6 +130,8 @@ export const projectSchema = z.object({
   year: z.number().int().min(2020).max(2030),
   /** Date the record's links and content were last human-verified. */
   lastVerified: z.coerce.date(),
+  /** Review interval for staleness reporting. Defaults to quarterly. */
+  reviewCadence: z.enum(REVIEW_CADENCES).default('quarterly'),
   summary: z.string(),
   whyItMatters: z.string(),
   liveUrl: z.string().url().optional(),
@@ -128,6 +140,8 @@ export const projectSchema = z.object({
   tags: z.array(z.string()).default([]),
   artifacts: z.array(artifactSchema).default([]),
   related: z.array(z.string()).optional(),
+  /** Free-form context for the next verification pass. */
+  verificationNotes: z.string().optional(),
 });
 
 /* ------------------------------------------------------------------ */

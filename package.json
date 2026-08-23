@@ -9,6 +9,7 @@
     "preview": "astro preview",
     "check": "astro check",
     "check:links": "node scripts/link-check.mjs",
+    "check:stale": "node scripts/stale-report.mjs",
     "capture:thumbnails": "node scripts/capture-thumbnails.mjs",
     "astro": "astro"
   },
