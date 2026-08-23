@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: false
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A visual analysis of AI coding tools and intelligent-development ecosystems, with interactive sections for spectrum, architecture, scaling, and lifecycle."
 whyItMatters: "Presents research and comparative analysis of intelligent development tools as an interactive, art-directed information experience."
 liveUrl: "https://codecompare-cli-nightui.vercel.app/"

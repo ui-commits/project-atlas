@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: false
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A terminal-first developer profile exposing engineering background, capabilities, and project filesystem through command-line interaction and GUI boot mode."
 whyItMatters: "An interactive personal context interface showcasing command-line interaction patterns without replacing the direct Project Atlas navigation."
 liveUrl: "https://devprofile-lake.vercel.app/"

@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: true
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A strict TypeScript, accessibility-focused component system for agentic telemetry, log visualization, and LLM operations, with swappable themes."
 whyItMatters: "Provides high-density, high-contrast operational building blocks specifically tailored for intelligent agent interfaces and telemetry streams."
 liveUrl: "https://agentic-ui-kit-showcase.vercel.app/"

@@ -118,6 +118,8 @@ export const projectSchema = z.object({
   availability: z.enum(PROJECT_AVAILABILITIES),
   featured: z.boolean().default(false),
   year: z.number().int().min(2020).max(2030),
+  /** Date the record's links and content were last human-verified. */
+  lastVerified: z.coerce.date(),
   summary: z.string(),
   whyItMatters: z.string(),
   liveUrl: z.string().url().optional(),

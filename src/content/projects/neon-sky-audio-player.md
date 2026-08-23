@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: false
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A dark, boot-sequence-driven audio-player experience with local file intake, playback-graph analysis, live audio visualizer, and master-bus limiter states."
 whyItMatters: "Demonstrates interaction and spatial audio design beyond developer systems, built with an atmospheric, cohesive audiovisual interface."
 liveUrl: "https://neon-ghost-music-player.vercel.app/"

@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: false
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A light, component-focused CI/icon system with CSS-driven inactive, active, success, and failure states."
 whyItMatters: "Provides a clean, unmistakable visual grammar for developer workflows, continuous integration status, and system health."
 liveUrl: "https://rosetta-ui-kit.vercel.app/"

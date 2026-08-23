@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: true
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A visual AI-agent studio combining a workflow canvas, orchestration engine, policy governance, LLM routing, and real-time monitoring."
 whyItMatters: "Removes the friction of building complex agent topologies with a structured visual workspace mapping directly to runtime behavior."
 liveUrl: "https://meridian-nine-zeta.vercel.app/"

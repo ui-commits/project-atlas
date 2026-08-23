@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: false
 year: 2026
+lastVerified: "2026-08-23"
 summary: "An automated article generation and intelligent content synthesis platform powered by agentic workflow pipelines and structured LLM routing."
 whyItMatters: "Explores autonomous content synthesis pipelines with multi-step validation, citation integrity, and structured drafting workflows."
 liveUrl: "https://dev-article-agentic.vercel.app/"

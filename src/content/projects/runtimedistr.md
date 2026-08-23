@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: true
 year: 2026
+lastVerified: "2026-08-23"
 summary: "An interactive command-and-control dashboard for exploring a hierarchical infrastructure ontology across multiple synchronized projections."
 whyItMatters: "Combines systems visualization, telemetry inspection, geographic and ontological projections, and natural-language interaction into one coherent operational interface."
 liveUrl: "https://runtimedistr.vercel.app/"

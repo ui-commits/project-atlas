@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: true
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A forest-intelligence design system for high-density data and low-light environments, presenting custom icons, 60+ components, and 4 themes."
 whyItMatters: "Combines organic field-inspired aesthetics with rigorous component density for complex analytical surfaces."
 liveUrl: "https://app-nu-rose.vercel.app/"

@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: false
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A personal engineering-context and profile destination presenting background, technical philosophies, and architectural principles."
 whyItMatters: "Serves as an external context reference linking architectural viewpoints to concrete deployed systems in the Atlas."
 liveUrl: "https://voluble-babka-6e3ce5.netlify.app/"

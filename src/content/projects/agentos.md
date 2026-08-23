@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: true
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A Figma-like visual platform for creating, connecting, and running autonomous AI agents on a node-based canvas with real-time execution updates."
 whyItMatters: "Brings spatial composition and tactile wiring to multi-agent systems, letting developers manipulate runtime topology as visual architecture."
 liveUrl: "https://agentos-rho-nine.vercel.app"

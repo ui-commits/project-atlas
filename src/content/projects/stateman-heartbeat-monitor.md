@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: true
 year: 2026
+lastVerified: "2026-08-23"
 summary: "An immersive telemetry dashboard for monitoring global sentinel-node latency, packet loss, health, and operational status, with interactive diagnostics and audio feedback."
 whyItMatters: "Pairs the correctness guarantees of formal state machines with an operational health dashboard — proving services are in valid states, not just responding to pings."
 liveUrl: "https://stateman-sigma.vercel.app"

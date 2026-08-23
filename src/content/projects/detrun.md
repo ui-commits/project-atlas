@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: true
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A deterministic workflow-orchestration engine with DAG visualization, finite-state-machine inspection, event ledger, circular-buffer metrics, and time-travel controls."
 whyItMatters: "Provides tangible evidence of systems thinking: complex multi-stage execution plans can be stepped forward, rewound, inspected, and verified."
 liveUrl: "https://detrun.vercel.app"

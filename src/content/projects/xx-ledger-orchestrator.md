@@ -6,6 +6,7 @@ status: "live"
 availability: "public"
 featured: true
 year: 2026
+lastVerified: "2026-08-23"
 summary: "A state-machine-driven workflow simulator with order, traffic, and agent actors; workflow ingestion; telemetry audit; simulation history; and local persistence."
 whyItMatters: "A practical orchestration sandbox that connects XState actors to operational metrics, verifiable ledgers, and replayable simulation runs."
 liveUrl: "https://xx-eta-hazel.vercel.app"
