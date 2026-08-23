@@ -1,128 +1,375 @@
 ---
 /**
- * DynamicBackground — Ambient particulate canvas effect.
- * Renders glowing amethyst sleet / celestial precipitation particles
- * harmonized with the Twilight Amethyst palette (#FFD0EC, #81689D, #474F7A).
- * Ultra-performant 60fps canvas loop with reduced motion support.
+ * DynamicBackground — Multicolor ember field over Atlas' midnight indigo.
+ * Keeps the page background exactly as defined by --color-page (#191e38)
+ * and renders the jewel-tone ember simulation on a transparent canvas.
+ * Includes a soft bottom glow, DPR-aware resizing, view-transition
+ * lifecycle, and reduced-motion support.
  */
 ---
 
+<div class="glow" aria-hidden="true"></div>
 <canvas id="ambient-canvas" class="ambient-canvas" aria-hidden="true"></canvas>
 
 <script>
   function initAmbientCanvas() {
     const canvas = document.getElementById('ambient-canvas') as HTMLCanvasElement | null;
+    const glow = document.querySelector('.glow') as HTMLElement | null;
     if (!canvas) return;
-
     const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
+    let W: number, H: number, DPR: number;
     let animationFrameId: number;
+    let running = true;
+    let resizeQueued = false;
 
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Palette particle colors
-    const colors = [
-      'rgba(255, 208, 236, ', // Rose gold
-      'rgba(129, 104, 157, ', // Amethyst
-      'rgba(198, 181, 219, ', // Soft lilac
-      'rgba(110, 231, 183, ', // Mint spark
+    void glow; // retained in DOM for CSS glow; no JS needed
+    // Non-null aliases after the early returns above — satisfies strict null checks
+    // without peppering every call site with `!`.
+    const canvasEl = canvas;
+    const ctx2 = ctx;
+
+    const palettes: [number, number, number][] = [
+      [59, 255, 0], // acid green
+      [205, 246, 255], // pale ice cyan
+      [90, 255, 202], // mint
+      [123, 69, 255], // violet
+      [237, 0, 0], // red
+      [237, 0, 0], // red (weighted)
+      [0, 182, 45], // deep green
     ];
 
-    interface Particle {
-      x: number;
-      y: number;
-      length: number;
-      thickness: number;
-      speedY: number;
-      speedX: number;
-      opacity: number;
-      colorBase: string;
-      glow: boolean;
-    }
+    const SPRITE_SIZE = 64;
+    const ALPHA_STEPS = 12;
+    let sprites: HTMLCanvasElement[][] = [];
 
-    const particleCount = Math.min(Math.floor(width / 14), 110);
-    const particles: Particle[] = [];
-
-    for (let i = 0; i < particleCount; i++) {
-      const colorIndex = Math.floor(Math.random() * colors.length);
-      const isMint = colorIndex === 3;
-      particles.push({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        length: Math.random() * 8 + 4,
-        thickness: Math.random() * 1.5 + 0.8,
-        speedY: Math.random() * 1.6 + 0.9,
-        speedX: (Math.random() - 0.2) * 0.4,
-        opacity: Math.random() * 0.45 + 0.2,
-        colorBase: colors[colorIndex] || 'rgba(255, 208, 236, ',
-        glow: isMint || Math.random() > 0.7,
+    function buildSprites() {
+      sprites = palettes.map(([r, g, b]) => {
+        const steps: HTMLCanvasElement[] = [];
+        for (let i = 0; i <= ALPHA_STEPS; i++) {
+          const a = i / ALPHA_STEPS;
+          const s = document.createElement('canvas');
+          s.width = s.height = SPRITE_SIZE;
+          const sctx = s.getContext('2d')!;
+          const cx = SPRITE_SIZE / 2;
+          const cy = SPRITE_SIZE / 2;
+          const radius = SPRITE_SIZE / 2;
+          const grad = sctx.createRadialGradient(cx, cy, 0, cx, cy, radius);
+          grad.addColorStop(0, `rgba(${r},${g},${b},${a})`);
+          grad.addColorStop(0.4, `rgba(${r},${g},${b},${a * 0.35})`);
+          grad.addColorStop(1, `rgba(${r},${g},${b},0)`);
+          sctx.fillStyle = grad;
+          sctx.beginPath();
+          sctx.arc(cx, cy, radius, 0, Math.PI * 2);
+          sctx.fill();
+          steps.push(s);
+        }
+        return steps;
       });
     }
-
-    function onResize() {
-      if (!canvas || !ctx) return;
-      width = canvas.width = window.innerWidth;
-      height = canvas.height = window.innerHeight;
+    function rand(min: number, max: number) {
+      return Math.random() * (max - min) + min;
+    }
+    function lerp(a: number, b: number, t: number) {
+      return a + (b - a) * t;
     }
 
-    window.addEventListener('resize', onResize, { passive: true });
+    const DENSITY_DIVISOR = 11500;
+    const MAX_EMBERS = 120;
 
-    function render() {
-      if (!ctx || !canvas) return;
-      ctx.clearRect(0, 0, width, height);
+    type TrailPoint = { x: number; y: number; a: number };
 
-      // Render drifting crystalline sleet streaks
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i]!;
+    class Ember {
+      depth!: number;
+      x!: number;
+      y!: number;
+      paletteIdx!: number;
+      baseColor!: [number, number, number];
+      size!: number;
+      baseSize!: number;
+      speedY!: number;
+      baseSpeedY!: number;
+      speedX!: number;
+      wobble!: number;
+      wobbleSpeed!: number;
+      wobbleAmp!: number;
+      life!: number;
+      maxLife!: number;
+      alpha!: number;
+      targetAlpha!: number;
+      state!: 'rising' | 'sparking' | 'charring';
+      stateTimer!: number;
+      charAmount!: number;
+      transition!: number;
+      fate!: number;
+      flicker!: number;
+      flickerSpeed!: number;
+      gust!: number;
+      gustKickX!: number;
+      trail: TrailPoint[] = [];
 
-        ctx.beginPath();
-        ctx.moveTo(p.x, p.y);
-        ctx.lineTo(p.x + p.speedX * p.length, p.y + p.length);
+      constructor(depth: number) {
+        this.depth = depth;
+        this.reset(true);
+      }
 
-        ctx.strokeStyle = `${p.colorBase}${p.opacity})`;
-        ctx.lineWidth = p.thickness;
-        ctx.lineCap = 'round';
+      reset(initial: boolean) {
+        const d = this.depth;
+        this.x = rand(0, W);
+        this.y = initial ? rand(H * 0.2, H * 1.1) : H + rand(10, 80);
+        this.paletteIdx = (Math.random() * palettes.length) | 0;
+        this.baseColor = palettes[this.paletteIdx] as [number, number, number];
+        this.size = rand(0.8, 2.2) + d * rand(0.8, 2.0);
+        this.baseSize = this.size;
+        this.speedY = rand(0.06, 0.18) + d * rand(0.06, 0.2);
+        this.baseSpeedY = this.speedY;
+        this.speedX = rand(-0.15, 0.15);
+        this.wobble = rand(0, Math.PI * 2);
+        this.wobbleSpeed = rand(0.01, 0.03);
+        this.wobbleAmp = rand(0.3, 1.2);
+        this.life = 0;
+        this.maxLife = rand(500, 1400);
+        this.alpha = 0;
+        this.targetAlpha = (0.35 + d * 0.5) * rand(0.85, 1);
+        this.state = 'rising';
+        this.stateTimer = 0;
+        this.charAmount = 0;
+        this.transition = 0;
+        this.fate = Math.random();
+        this.flicker = rand(0, Math.PI * 2);
+        this.flickerSpeed = rand(0.05, 0.15);
+        this.gust = 0;
+        this.gustKickX = 0;
+        this.trail = [];
+      }
 
-        if (p.glow) {
-          ctx.shadowBlur = 8;
-          ctx.shadowColor = `${p.colorBase}0.8)`;
-        } else {
-          ctx.shadowBlur = 0;
-        }
-
-        ctx.stroke();
-
-        if (!prefersReducedMotion) {
-          p.y += p.speedY;
-          p.x += p.speedX;
-
-          // Wrap around edges
-          if (p.y > height + 20) {
-            p.y = -20;
-            p.x = Math.random() * width;
-          }
-          if (p.x > width + 20) p.x = -20;
-          if (p.x < -20) p.x = width + 20;
+      maybeTriggerGust() {
+        if (this.state === 'charring') return;
+        if (this.gust < 0.05 && Math.random() < 0.0022) {
+          this.gust = rand(1.6, 3.2);
+          this.gustKickX = rand(-0.6, 0.6);
         }
       }
 
-      ctx.shadowBlur = 0;
-      animationFrameId = requestAnimationFrame(render);
+      update(windX: number) {
+        this.life++;
+        this.wobble += this.wobbleSpeed;
+        this.flicker += this.flickerSpeed;
+        if (this.alpha < this.targetAlpha) {
+          this.alpha = Math.min(this.targetAlpha, this.alpha + 0.02);
+        }
+        const lifeRatio = this.life / this.maxLife;
+        if (this.state === 'rising' && lifeRatio > 0.4 && lifeRatio < 0.6 && Math.random() < 0.01) {
+          if (this.fate < 0.15) {
+            this.state = 'sparking';
+            this.transition = 0;
+          } else if (this.fate < 0.35) {
+            this.state = 'charring';
+            this.transition = 0;
+          }
+        }
+        if (this.transition < 1) this.transition = Math.min(1, this.transition + 0.08);
+        this.maybeTriggerGust();
+        if (this.gust > 0) {
+          this.gust *= 0.945;
+          if (this.gust < 0.02) {
+            this.gust = 0;
+            this.gustKickX = 0;
+          }
+        }
+        const gustMultiplier = 1 + this.gust;
+        if (this.state === 'sparking') {
+          this.trail.push({ x: this.x, y: this.y, a: this.alpha });
+          if (this.trail.length > 6) this.trail.shift();
+          this.speedY += 0.03;
+          this.size = Math.max(0.5, this.size - 0.02);
+          this.stateTimer++;
+          this.alpha = Math.max(0, this.alpha - 0.012);
+          if (this.stateTimer > 60 || this.alpha <= 0.02) this.alpha = 0;
+        } else if (this.state === 'charring') {
+          this.speedY *= 0.985;
+          this.size = Math.max(0, this.size - 0.008);
+          this.charAmount = Math.min(1, this.charAmount + 0.006);
+          this.alpha = Math.max(0, this.alpha - 0.006);
+          if (this.size <= 0.15 || this.alpha <= 0.02) this.alpha = 0;
+        } else {
+          if (lifeRatio > 0.85) this.alpha = Math.max(0, this.alpha - 0.01);
+          if (this.gust > 0.3) {
+            this.trail.push({ x: this.x, y: this.y, a: this.alpha });
+            if (this.trail.length > 5) this.trail.shift();
+          } else if (this.trail.length) {
+            this.trail.shift();
+          }
+        }
+        this.x +=
+          this.speedX +
+          this.gustKickX * Math.min(1, this.gust) +
+          windX +
+          Math.sin(this.wobble) * this.wobbleAmp * 0.05;
+        this.y -= this.speedY * gustMultiplier;
+        if (this.y < -20 || this.alpha <= 0.01 || this.x < -50 || this.x > W + 50) {
+          this.reset(false);
+        }
+      }
+
+      draw() {
+        const flick = 0.8 + Math.sin(this.flicker) * 0.2;
+        let [r, g, b] = this.baseColor as [number, number, number];
+        if (this.state === 'sparking') {
+          const t = this.transition;
+          r = lerp(r, Math.min(255, r + (255 - r) * 0.55), t);
+          g = lerp(g, Math.min(255, g + (255 - g) * 0.55), t);
+          b = lerp(b, Math.min(255, b + (255 - b) * 0.55), t);
+        } else if (this.state === 'charring') {
+          const c = this.charAmount;
+          r = r * (1 - c) + 40 * c;
+          g = g * (1 - c) + 15 * c;
+          b = b * (1 - c) + 10 * c;
+        } else if (this.gust > 0.15) {
+          const t = Math.min(1, this.gust / 3) * 0.4;
+          r = lerp(r, 255, t);
+          g = lerp(g, 255, t);
+          b = lerp(b, 255, t);
+        }
+        const a = this.alpha * flick;
+        if (a <= 0 || this.size <= 0) return;
+        if (this.trail.length > 1) {
+          for (let i = 0; i < this.trail.length - 1; i++) {
+            const p = this.trail[i]!;
+            const tAlpha = p.a * (i / this.trail.length) * 0.5;
+            if (tAlpha <= 0.01) continue;
+            this.drawSprite(p.x, p.y, this.size * 3, tAlpha, r, g, b);
+          }
+        }
+        const glowSize = this.size * (this.state === 'sparking' || this.gust > 0.3 ? 5 : 4);
+        this.drawSprite(this.x, this.y, glowSize, a, r, g, b);
+        const coreR = lerp(r, 255, 0.6);
+        const coreG = lerp(g, 255, 0.6);
+        const coreB = lerp(b, 255, 0.6);
+        ctx2.fillStyle = `rgba(${(coreR | 0)},${(coreG | 0)},${(coreB | 0)},${a})`;
+        ctx2.beginPath();
+        ctx2.arc(this.x, this.y, this.size * 0.5, 0, Math.PI * 2);
+        ctx2.fill();
+      }
+
+      drawSprite(x: number, y: number, radius: number, alpha: number, r: number, g: number, b: number) {
+        const step = Math.max(0, Math.min(ALPHA_STEPS, Math.round(alpha * ALPHA_STEPS)));
+        const [br, bg, bb] = this.baseColor;
+        const shifted = Math.abs(br - r) + Math.abs(bg - g) + Math.abs(bb - b) > 40;
+        if (!shifted) {
+          const sprite = sprites[this.paletteIdx]?.[step];
+          if (!sprite) return;
+          const size = radius * 2;
+          ctx2.drawImage(sprite, x - radius, y - radius, size, size);
+          return;
+        }
+        const grad = ctx2.createRadialGradient(x, y, 0, x, y, radius);
+        grad.addColorStop(0, `rgba(${(r | 0)},${(g | 0)},${(b | 0)},${alpha})`);
+        grad.addColorStop(0.4, `rgba(${(r | 0)},${(g | 0)},${(b | 0)},${alpha * 0.35})`);
+        grad.addColorStop(1, `rgba(${(r | 0)},${(g | 0)},${(b | 0)},0)`);
+        ctx2.fillStyle = grad;
+        ctx2.beginPath();
+        ctx2.arc(x, y, radius, 0, Math.PI * 2);
+        ctx2.fill();
+      }
     }
 
-    render();
+    let embers: Ember[] = [];
 
-    // Cleanup on view transition navigations
+    function rebuildEmbers() {
+      embers = [];
+      const count = Math.min(MAX_EMBERS, Math.floor((W * H) / DENSITY_DIVISOR));
+      for (let i = 0; i < count; i++) {
+        const roll = Math.random();
+        const depth =
+          roll < 0.4 ? rand(0, 0.33) : roll < 0.75 ? rand(0.33, 0.66) : rand(0.66, 1);
+        embers.push(new Ember(depth));
+      }
+      embers.sort((a, b) => a.depth - b.depth);
+    }
+
+    function resize() {
+      DPR = Math.min(window.devicePixelRatio || 1, 2);
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvasEl.width = W * DPR;
+      canvasEl.height = H * DPR;
+      canvasEl.style.width = W + 'px';
+      canvasEl.style.height = H + 'px';
+      ctx2.setTransform(DPR, 0, 0, DPR, 0, 0);
+      buildSprites();
+      rebuildEmbers();
+    }
+
+    buildSprites();
+    resize();
+
+    function onResize() {
+      if (resizeQueued) return;
+      resizeQueued = true;
+      requestAnimationFrame(() => {
+        resize();
+        resizeQueued = false;
+      });
+    }
+    window.addEventListener('resize', onResize, { passive: true });
+
+    let windPhase = 0;
+    function currentWind() {
+      windPhase += 0.0015;
+      return Math.sin(windPhase) * 0.35 + Math.sin(windPhase * 0.37) * 0.15;
+    }
+
+    function animate() {
+      if (!running) return;
+      ctx2.clearRect(0, 0, W, H);
+      ctx2.globalCompositeOperation = 'lighter';
+      const windX = currentWind();
+      for (const e of embers) {
+        e.update(reducedMotion ? windX * 0.2 : windX);
+        e.draw();
+      }
+      ctx2.globalCompositeOperation = 'source-over';
+      animationFrameId = requestAnimationFrame(animate);
+    }
+
+    document.addEventListener('visibilitychange', () => {
+      running = !document.hidden;
+      if (running) requestAnimationFrame(animate);
+    });
+
+    if (reducedMotion) {
+      let acc = 0;
+      const slowAnimate = () => {
+        if (!running) return;
+        acc++;
+        if (acc % 3 === 0) {
+          ctx2.clearRect(0, 0, W, H);
+          ctx2.globalCompositeOperation = 'lighter';
+          const windX = currentWind() * 0.2;
+          for (const e of embers) {
+            e.update(windX);
+            e.draw();
+          }
+          ctx2.globalCompositeOperation = 'source-over';
+        }
+        requestAnimationFrame(slowAnimate);
+      };
+      slowAnimate();
+    } else {
+      animate();
+    }
+
     document.addEventListener(
       'astro:before-swap',
       () => {
         cancelAnimationFrame(animationFrameId);
         window.removeEventListener('resize', onResize);
       },
-      { once: true }
+      { once: true },
     );
   }
 
@@ -139,5 +386,40 @@
     height: 100vh;
     pointer-events: none;
     z-index: 0;
+  }
+
+  .glow {
+    position: fixed;
+    bottom: -20vh;
+    left: 50%;
+    width: 140vw;
+    height: 60vh;
+    background:
+      radial-gradient(ellipse at 35% center, rgba(123, 69, 255, 0.1) 0%, rgba(123, 69, 255, 0) 55%),
+      radial-gradient(ellipse at 65% center, rgba(59, 255, 0, 0.06) 0%, rgba(59, 255, 0, 0) 55%),
+      radial-gradient(ellipse at center, rgba(90, 255, 202, 0.08) 0%, rgba(0, 0, 0, 0) 70%);
+    pointer-events: none;
+    filter: blur(10px);
+    animation: breathe 7s ease-in-out infinite;
+    transform-origin: 50% 100%;
+    z-index: 0;
+  }
+
+  @keyframes breathe {
+    0%,
+    100% {
+      transform: translateX(-50%) scale(1);
+      opacity: 0.85;
+    }
+    50% {
+      transform: translateX(-50%) scale(1.08);
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glow {
+      animation: none;
+    }
   }
 </style>

@@ -8,7 +8,6 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import SessionStatus from '../components/SessionStatus.astro';
 
 const allProjects = await getCollection('projects');
 const sortedProjects = allProjects.sort((a, b) =>
@@ -17,7 +16,6 @@ const sortedProjects = allProjects.sort((a, b) =>
 ---
 
 <BaseLayout title="Project Atlas — Creative Engineering Registry">
-  <SessionStatus recordCount={sortedProjects.length} />
   <div class="atlas-stage-wrapper">
     <!-- ------------------------------------------------------------------ -->
     <!--  Semi-transparent Glass Container for the 19 Accessions            -->
@@ -68,38 +66,8 @@ const sortedProjects = allProjects.sort((a, b) =>
     updateActiveCount();
   }
 
-  function setupSessionStatus() {
-    const state = document.getElementById('session-state');
-    const message = document.getElementById('session-message');
-    const blocker = document.getElementById('session-blocker');
-    const next = document.getElementById('session-next') as HTMLAnchorElement | null;
-    const select = document.getElementById('header-category-filter') as HTMLSelectElement | null;
-    const grid = document.getElementById('project-grid');
-    if (!state || !message || !blocker || !next || !grid) return;
-
-    const sync = () => {
-      const visible = grid.querySelectorAll<HTMLElement>('.project-card:not([hidden])').length;
-      const selected = select?.value ?? 'all';
-      state.textContent = 'Ready';
-      message.textContent = selected === 'all'
-        ? 'Session active · registry synchronized'
-        : `Session active · ${selected} filter engaged`;
-      blocker.textContent = visible === 0 ? 'No records match this filter' : '—';
-      next.textContent = visible === 0 ? 'Clear the filter to continue' : 'Select an accession to descend to dossier';
-      next.href = visible === 0 ? '/' : '#project-grid';
-    };
-
-    if (select && select.dataset.sessionBound !== 'true') {
-      select.dataset.sessionBound = 'true';
-      select.addEventListener('change', () => setTimeout(sync, 30));
-    }
-    sync();
-  }
-
   setupCountSync();
-  setupSessionStatus();
   document.addEventListener('astro:page-load', setupCountSync);
-  document.addEventListener('astro:page-load', setupSessionStatus);
 </script>
 
 <style>

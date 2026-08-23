@@ -24,12 +24,10 @@ test.describe('home registry', () => {
     await expect(cards).toHaveCount(TOTAL_RECORDS);
     await expect(page.locator('.project-card:not([hidden])')).toHaveCount(TOTAL_RECORDS);
 
-    // Session status panel and stage counter agree on the record count.
-    await expect(page.locator('#session-record-count')).toHaveText(String(TOTAL_RECORDS));
     await expect(page.locator('#active-count')).toHaveText(`[${TOTAL_RECORDS} records]`);
   });
 
-  test('category filter updates visible cards, counters, session text, and URL', async ({
+  test('category filter updates visible cards, counters, and URL', async ({
     page,
   }) => {
     await page.goto('/');
@@ -49,10 +47,6 @@ test.describe('home registry', () => {
     await expect(page.locator(`.project-card[data-category="${category}"]:not([hidden])`)).toHaveCount(
       expected,
     );
-
-    // Session status reflects the engaged filter.
-    await expect(page.locator('#session-message')).toContainText(`${category} filter engaged`);
-    await expect(page.locator('#session-state')).toHaveText('Ready');
 
     // Filter state is URL-backed without a navigation.
     await expect(page).toHaveURL(new RegExp(`/\\?category=${category}$`));
