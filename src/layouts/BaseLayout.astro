@@ -8,6 +8,7 @@
  */
 
 import '../styles/global.css';
+import PreviewModal from '../components/PreviewModal.astro';
 
 interface Props {
   title: string;
@@ -53,5 +54,92 @@ const {
         </a>
       </p>
     </footer>
+
+    <PreviewModal />
+
+    <script>
+      /**
+       * Preview Modal Controller
+       * Handles opening/closing the iframe preview modal, keyboard navigation,
+       * and loading states.
+       */
+      (function initPreviewModal() {
+        const modal = document.getElementById('preview-modal');
+        const iframe = document.getElementById('preview-iframe') as HTMLIFrameElement | null;
+        const openLink = document.getElementById('preview-open-link') as HTMLAnchorElement | null;
+        const loadingIndicator = modal?.querySelector('[data-loading]') as HTMLElement | null;
+
+        if (!modal || !iframe || !openLink || !loadingIndicator) return;
+
+        let lastFocusedElement: HTMLElement | null = null;
+
+        // Open modal when preview button is clicked
+        document.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          const previewButton = target.closest('[data-preview-url]') as HTMLElement;
+          
+          if (previewButton) {
+            e.preventDefault();
+            const url = previewButton.dataset.previewUrl;
+            if (url) openModal(url);
+          }
+        });
+
+        // Close modal when close triggers are clicked
+        modal.addEventListener('click', (e) => {
+          const target = e.target as HTMLElement;
+          if (target.closest('[data-modal-close]')) {
+            closeModal();
+          }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape' && modal.getAttribute('aria-hidden') === 'false') {
+            closeModal();
+          }
+        });
+
+        // Handle iframe load event to hide loading indicator
+        iframe.addEventListener('load', () => {
+          if (loadingIndicator) {
+            loadingIndicator.setAttribute('data-loading', 'false');
+          }
+        });
+
+        function openModal(url: string) {
+          if (!modal || !iframe || !openLink || !loadingIndicator) return;
+          
+          lastFocusedElement = document.activeElement as HTMLElement;
+          
+          // Set iframe src and show loading state
+          iframe.src = url;
+          openLink.href = url;
+          loadingIndicator.setAttribute('data-loading', 'true');
+          
+          // Show modal
+          modal.setAttribute('aria-hidden', 'false');
+          document.body.style.overflow = 'hidden';
+          
+          // Focus close button
+          const closeButton = modal.querySelector('[data-modal-close]') as HTMLElement;
+          closeButton?.focus();
+        }
+
+        function closeModal() {
+          if (!modal || !iframe) return;
+          
+          modal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          
+          // Clear iframe to stop loading
+          iframe.src = 'about:blank';
+          
+          // Restore focus
+          lastFocusedElement?.focus();
+          lastFocusedElement = null;
+        }
+      })();
+    </script>
   </body>
 </html>
