@@ -10,7 +10,8 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
-import { CATEGORY_LABELS, STATUS_LABELS } from '../lib/registry';
+import { STATUS_LABELS } from '../lib/registry';
+import type { ProjectStatus } from '../schemas/project';
 
 const allProjects = await getCollection('projects');
 
@@ -20,18 +21,21 @@ const archivedProjects = allProjects
   .sort((a, b) => a.data.registryId.localeCompare(b.data.registryId));
 
 // Group by status for the section breakdown
-const byStatus = archivedProjects.reduce<Record<string, typeof archivedProjects>>(
+const byStatus = archivedProjects.reduce<Partial<Record<ProjectStatus, typeof archivedProjects>>>(
   (acc, project) => {
     const s = project.data.status;
     if (!acc[s]) acc[s] = [];
-    acc[s].push(project);
+    acc[s]!.push(project);
     return acc;
   },
   {}
 );
 
 // Ordered status groups: archive first, then local
-const statusOrder = (['archive', 'local'] as const).filter((s) => byStatus[s]?.length > 0);
+const statusOrder = (['archive', 'local'] as const).filter((s) => {
+  const group = byStatus[s];
+  return group !== undefined && group.length > 0;
+});
 ---
 
 <BaseLayout
@@ -74,11 +78,11 @@ const statusOrder = (['archive', 'local'] as const).filter((s) => byStatus[s]?.l
             <h2 class="status-group-title" id={`group-${status}`}>
               {STATUS_LABELS[status]}
             </h2>
-            <span class="mono group-count">[{byStatus[status].length}]</span>
+            <span class="mono group-count">[{byStatus[status]!.length}]</span>
           </div>
 
           <div class="project-grid" aria-labelledby={`group-${status}`}>
-            {byStatus[status].map((project) => (
+            {byStatus[status]!.map((project) => (
               <ProjectCard project={project} />
             ))}
           </div>

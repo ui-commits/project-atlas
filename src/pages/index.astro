@@ -13,7 +13,6 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { CATEGORY_LABELS, STATUS_LABELS } from '../lib/registry';
-import { PROJECT_CATEGORIES, PROJECT_STATUSES } from '../schemas/project';
 
 const allProjects = await getCollection('projects');
 const featuredProjects = allProjects
@@ -216,7 +215,8 @@ const presentStatuses   = [...new Set(featuredProjects.map((p) => p.data.status)
 
         if (next !== -1) {
           e.preventDefault();
-          pills[next].focus();
+          const nextPill = pills[next];
+          if (nextPill) nextPill.focus();
         }
       });
     });
