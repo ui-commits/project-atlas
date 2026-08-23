@@ -1,5 +1,5 @@
 ---
-title: "devArticleAgentic"
+title: "Agentic Article Studio"
 registryId: "PRJ-019"
 category: "agents-automation"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: false
 year: 2026
 lastVerified: "2026-08-23"
-summary: "An automated article generation and intelligent content synthesis platform powered by agentic workflow pipelines and structured LLM routing."
+summary: "An experimental workspace for composing articles through structured prompts, routed LLM steps, and review-oriented workflow stages."
 whyItMatters: "Explores autonomous content synthesis pipelines with multi-step validation, citation integrity, and structured drafting workflows."
 liveUrl: "https://dev-article-agentic.vercel.app/"
 githubUrl: "https://github.com/ui-commits/meridian"

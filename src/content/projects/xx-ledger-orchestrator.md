@@ -1,5 +1,5 @@
 ---
-title: "XX Ledger Orchestrator"
+title: "XX / Workflow Ledger Simulator"
 registryId: "PRJ-013"
 category: "agents-automation"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: true
 year: 2026
 lastVerified: "2026-08-23"
-summary: "A state-machine-driven workflow simulator with order, traffic, and agent actors; workflow ingestion; telemetry audit; simulation history; and local persistence."
+summary: "A workflow simulation workspace combining state-machine actors, operational telemetry, replayable runs, and local persistence."
 whyItMatters: "A practical orchestration sandbox that connects XState actors to operational metrics, verifiable ledgers, and replayable simulation runs."
 liveUrl: "https://xx-eta-hazel.vercel.app"
 githubUrl: "https://github.com/ui-commits/XX"

@@ -1,5 +1,5 @@
 ---
-title: "PNW / AICG UI Kit"
+title: "PNW / AICG Design System"
 registryId: "PRJ-006"
 category: "ui-systems"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: false
 year: 2026
 lastVerified: "2026-08-23"
-summary: "A professional design system for orchestrated workflows and intelligent infrastructure, presenting five calibrated palettes including Timberline Canopy and Alvord Basalt."
+summary: "A design system for orchestrated workflows and intelligent infrastructure, with five production-oriented themes and documented UI primitives."
 whyItMatters: "Translates the high-contrast density of field cartography into an accessible, production-ready design system with theme switching and full component documentation."
 liveUrl: "https://pnw-theme-ui-kit.vercel.app/"
 tags:

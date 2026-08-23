@@ -1,5 +1,5 @@
 ---
-title: "RUNTIMEDISTR / Hermes C2"
+title: "RUNTIMEDISTR / Systems Command Center"
 registryId: "PRJ-001"
 category: "runtime-systems"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: true
 year: 2026
 lastVerified: "2026-08-23"
-summary: "An interactive command-and-control dashboard for exploring a hierarchical infrastructure ontology across multiple synchronized projections."
+summary: "An interactive systems command center connecting geographic, topology, hardware, ontology, and knowledge views of one infrastructure model."
 whyItMatters: "Combines systems visualization, telemetry inspection, geographic and ontological projections, and natural-language interaction into one coherent operational interface."
 liveUrl: "https://runtimedistr.vercel.app/"
 githubUrl: "https://github.com/ui-commits/RUNTIMEDISTR"

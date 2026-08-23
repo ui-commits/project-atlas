@@ -1,5 +1,5 @@
 ---
-title: "Xstatepro"
+title: "XState Pro / Runtime Explorer"
 registryId: "PRJ-011"
 category: "agents-automation"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: true
 year: 2026
 lastVerified: "2026-08-23"
-summary: "An XState v5-powered runtime explorer using a subway-style transit map, branch/fork interactions, telemetry, adaptive routing, and Gruvbox themes."
+summary: "A transit-map-inspired XState runtime explorer for navigating state, branches, telemetry, and adaptive routing."
 whyItMatters: "An unusually playful and tactile way to make formal state-machine navigation and runtime state graphs tangible and engaging."
 liveUrl: "https://xstatepro.vercel.app"
 githubUrl: "https://github.com/ui-commits/Xstatepro"

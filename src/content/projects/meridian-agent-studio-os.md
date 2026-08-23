@@ -1,5 +1,5 @@
 ---
-title: "Meridian / Agent Studio OS"
+title: "Meridian / Agent Operations Studio"
 registryId: "PRJ-007"
 category: "agents-automation"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: true
 year: 2026
 lastVerified: "2026-08-23"
-summary: "A visual AI-agent studio combining a workflow canvas, orchestration engine, policy governance, LLM routing, and real-time monitoring."
+summary: "A visual operations studio for designing agent workflows, applying policy and model routing, and monitoring execution in real time."
 whyItMatters: "Removes the friction of building complex agent topologies with a structured visual workspace mapping directly to runtime behavior."
 liveUrl: "https://meridian-nine-zeta.vercel.app/"
 githubUrl: "https://github.com/ui-commits/meridian"

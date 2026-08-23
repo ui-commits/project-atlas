@@ -1,5 +1,5 @@
 ---
-title: "CodeCompare CLI / Night Forest Analytics"
+title: "CodeCompare / AI Tool Landscape"
 registryId: "PRJ-014"
 category: "tools-analysis"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: false
 year: 2026
 lastVerified: "2026-08-23"
-summary: "A visual analysis of AI coding tools and intelligent-development ecosystems, with interactive sections for spectrum, architecture, scaling, and lifecycle."
+summary: "An interactive research interface for comparing AI coding tools across capabilities, architecture, scaling, and the development lifecycle."
 whyItMatters: "Presents research and comparative analysis of intelligent development tools as an interactive, art-directed information experience."
 liveUrl: "https://codecompare-cli-nightui.vercel.app/"
 tags:

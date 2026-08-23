@@ -1,5 +1,5 @@
 ---
-title: "DevProfile Terminal"
+title: "Developer Profile / Terminal"
 registryId: "PRJ-017"
 category: "personal-context"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: false
 year: 2026
 lastVerified: "2026-08-23"
-summary: "A terminal-first developer profile exposing engineering background, capabilities, and project filesystem through command-line interaction and GUI boot mode."
+summary: "A terminal-inspired developer profile for exploring engineering background, capabilities, and projects through a command-line interface."
 whyItMatters: "An interactive personal context interface showcasing command-line interaction patterns without replacing the direct Project Atlas navigation."
 liveUrl: "https://devprofile-lake.vercel.app/"
 tags:

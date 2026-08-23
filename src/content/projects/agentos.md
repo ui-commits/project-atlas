@@ -1,5 +1,5 @@
 ---
-title: "AgentOS / Agent Studio OS"
+title: "AgentOS / Visual Agent Builder"
 registryId: "PRJ-008"
 category: "agents-automation"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: true
 year: 2026
 lastVerified: "2026-08-23"
-summary: "A Figma-like visual platform for creating, connecting, and running autonomous AI agents on a node-based canvas with real-time execution updates."
+summary: "A node-based visual builder for designing, connecting, and running autonomous agents with live execution feedback."
 whyItMatters: "Brings spatial composition and tactile wiring to multi-agent systems, letting developers manipulate runtime topology as visual architecture."
 liveUrl: "https://agentos-rho-nine.vercel.app"
 githubUrl: "https://github.com/ui-commits/AgentOS"

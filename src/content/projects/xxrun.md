@@ -1,5 +1,5 @@
 ---
-title: "Xxrun"
+title: "Xxrun / Event Replay Explorer"
 registryId: "PRJ-012"
 category: "creative-experiments"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: true
 year: 2026
 lastVerified: "2026-08-23"
-summary: "An event-driven, multi-node XState telemetry kernel with deterministic transition maps, indexable event logs, and a time-machine scrubbing interface."
+summary: "An event-driven XState telemetry sandbox with transition maps, searchable event history, and a time-travel replay interface."
 whyItMatters: "Compact but visually distinctive runtime simulation with a deep-space terminal aesthetic and rigorous event ledger tracking."
 liveUrl: "https://xxrun.vercel.app"
 githubUrl: "https://github.com/ui-commits/Xxrun"

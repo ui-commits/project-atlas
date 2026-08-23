@@ -1,5 +1,5 @@
 ---
-title: "Rosetta UI Kit"
+title: "Rosetta CI Interface Kit"
 registryId: "PRJ-005"
 category: "ui-systems"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: false
 year: 2026
 lastVerified: "2026-08-23"
-summary: "A light, component-focused CI/icon system with CSS-driven inactive, active, success, and failure states."
+summary: "A component and icon system for CI workflows, using clear CSS-driven states for pending, active, successful, and failed work."
 whyItMatters: "Provides a clean, unmistakable visual grammar for developer workflows, continuous integration status, and system health."
 liveUrl: "https://rosetta-ui-kit.vercel.app/"
 tags:

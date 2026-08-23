@@ -1,5 +1,5 @@
 ---
-title: "StateMan / Heartbeat Monitor"
+title: "StateMan / Systems Health Monitor"
 registryId: "PRJ-009"
 category: "tools-analysis"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: true
 year: 2026
 lastVerified: "2026-08-23"
-summary: "An immersive telemetry dashboard for monitoring global sentinel-node latency, packet loss, health, and operational status, with interactive diagnostics and audio feedback."
+summary: "An operations dashboard for reading distributed-system health through latency, packet loss, sentinel status, and interactive diagnostics."
 whyItMatters: "Pairs the correctness guarantees of formal state machines with an operational health dashboard — proving services are in valid states, not just responding to pings."
 liveUrl: "https://stateman-sigma.vercel.app"
 githubUrl: "https://github.com/ui-commits/StateMan"

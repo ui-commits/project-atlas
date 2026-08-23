@@ -1,5 +1,5 @@
 ---
-title: "Voluble Babka"
+title: "Engineering Profile & Context"
 registryId: "PRJ-018"
 category: "personal-context"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: false
 year: 2026
 lastVerified: "2026-08-23"
-summary: "A personal engineering-context and profile destination presenting background, technical philosophies, and architectural principles."
+summary: "A concise personal site that provides the engineering background, working principles, and context behind the Atlas."
 whyItMatters: "Serves as an external context reference linking architectural viewpoints to concrete deployed systems in the Atlas."
 liveUrl: "https://voluble-babka-6e3ce5.netlify.app/"
 tags:

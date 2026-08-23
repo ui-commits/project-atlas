@@ -1,5 +1,5 @@
 ---
-title: "Project Tool / Browser Code Editor"
+title: "Project Tool / Browser IDE"
 registryId: "PRJ-015"
 category: "developer-tools"
 status: "live"
@@ -7,7 +7,7 @@ availability: "public"
 featured: false
 year: 2026
 lastVerified: "2026-08-23"
-summary: "A browser-based JavaScript code editor with multi-file tabs, import/export, split view, integrated terminal, command palette, autosave, and in-browser execution."
+summary: "A browser-based JavaScript workspace with multi-file editing, split views, commands, autosave, terminal output, and in-browser execution."
 whyItMatters: "A compact, immediately understandable developer-tool prototype providing zero-install code editing and execution in pure browser runtime."
 liveUrl: "https://project-tool-ebon.vercel.app/"
 tags:

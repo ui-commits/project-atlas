@@ -7,7 +7,7 @@ availability: "public"
 featured: true
 year: 2026
 lastVerified: "2026-08-23"
-summary: "A deterministic, animated eight-role runtime topology with provenance tracking, fault recovery, and a five-stage command-authorization boundary."
+summary: "An animated runtime-topology explorer that makes provenance, fault recovery, and command authorization legible across eight system roles."
 whyItMatters: "Demonstrates rigorous interaction design, state modeling, accessibility, and an unusual visual system for complex multi-agent control planes."
 liveUrl: "https://precious-torte-268bfe.netlify.app/"
 githubUrl: "https://github.com/ui-commits/chromatic-topology-ui"
