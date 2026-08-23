@@ -18,7 +18,7 @@
  *   node scripts/link-check.mjs [dist-dir]      (default: dist)
  */
 
-import { readdir, readFile, stat } from 'node:fs/promises';
+import { readdir, readFile, stat, appendFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const distDir = process.argv[2] ?? 'dist';
@@ -206,10 +206,15 @@ if (process.env.GITHUB_STEP_SUMMARY) {
     ...broken.map((r) => `- broken: <${r.url}> (${r.detail})`),
     ...transient.map((r) => `- unreachable (transient): <${r.url}> (${r.detail})`),
   ].join('\n');
-  await appendFile(
-    process.env.GITHUB_STEP_SUMMARY,
-    `\n## Link validation\n\n${rows}\n${detail ? `\n${detail}\n` : ''}`,
-  );
+  try {
+    await appendFile(
+      process.env.GITHUB_STEP_SUMMARY,
+      `\n## Link validation\n\n${rows}\n${detail ? `\n${detail}\n` : ''}`,
+    );
+  } catch (cause) {
+    // Reporting is best effort — never fail a green validation over it.
+    console.warn(`link-check: could not write step summary: ${cause?.message ?? cause}`);
+  }
 }
 
 process.exitCode =

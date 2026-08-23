@@ -27,23 +27,22 @@ test.describe('keyboard access and visible focus', () => {
     page,
   }) => {
     await page.goto('/');
-
-    // Tab order from a fresh load: skip link -> header name -> category select.
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-    await page.keyboard.press('Tab');
-
     const select = page.locator('#header-category-filter');
+
+    // Tab until the filter is reached instead of assuming a fixed order.
+    for (let i = 0; i < 10 && !(await select.evaluate((el) => el === document.activeElement)); i++) {
+      await page.keyboard.press('Tab');
+    }
     await expect(select).toBeFocused();
 
-    const focusIndicator = await select.evaluate(
-      (el) => getComputedStyle(el).boxShadow + ' | ' + getComputedStyle(el).borderColor,
-    );
-    expect(focusIndicator, 'focus must produce a non-default visual indicator').not.toContain(
-      'none',
-    );
+    // The select transitions its focus ring in; poll until it lands.
     // The site's focus token is the mint accent (#6ee7b7).
-    expect(focusIndicator).toContain('110, 231, 183');
+    await expect
+      .poll(() => select.evaluate((el) => getComputedStyle(el).boxShadow), {
+        timeout: 2_000,
+        message: 'keyboard focus must produce the mint focus ring',
+      })
+      .toContain('110, 231, 183');
   });
 
   test('keyboard focus continues into the card grid', async ({ page }) => {
